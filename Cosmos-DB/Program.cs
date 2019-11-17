@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Configuration;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using Microsoft.Azure.Cosmos;
+using Newtonsoft.Json;
 
 namespace Cosmos_DB
 {
@@ -25,7 +26,7 @@ namespace Cosmos_DB
 
         // The name of the database and container we will create
         private string databaseId = "HolidayDatabase";
-        private string containerId = "HolidayContainer";
+        private string containerId = "Test";
 
 
         public static async Task Main(string[] args)
@@ -64,10 +65,60 @@ namespace Cosmos_DB
             this.cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             await this.CreateDatabaseAsync();
             await this.CreateContainerAsync();
-            await this.AddItemsToContainerAsync();
             await this.QueryItemsAsync();
+            
+            // await this.DeletePersonItemAsync();
+            
+            await this.InsertPersonItemAsync();
+            await this.QueryItemsAsync();
+            
+            await this.InsertPersonItemAsync_2();
+            await this.QueryItemsAsync();
+
+            /* 
+            await this.AddItemsToContainerAsync();
+            await this.AddSample();
             await this.ReplaceFamilyItemAsync();
-            await this.DeleteFamilyItemAsync();
+            */
+        }
+
+        private async Task AddSample()
+        {
+            List<Person> persons = LoadJson();
+
+            foreach (var person in persons)
+            {
+                Console.WriteLine(person.id);
+                Console.WriteLine(person.name);
+                Console.WriteLine(person.passion);
+                
+                
+                try
+                {
+                    // Read the item to see if it exists
+                    ItemResponse<Person> personResponse = await this.container.ReadItemAsync<Person>(person.id, new PartitionKey(person.name));
+                    Console.WriteLine("Item in database with id: {0} already exists\n", personResponse.Resource.id);
+                }
+                catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+                {
+                    // Create an item in the container representing the Wakefield family. Note we provide the value of the partition key for this item, which is "Wakefield"
+                    ItemResponse<Person> personResponse = await this.container.CreateItemAsync<Person>(person, new PartitionKey(person.name));
+
+                    // Note that after creating the item, we can access the body of the item with the Resource property off the ItemResponse. We can also access the RequestCharge property to see the amount of RUs consumed on this request.
+                    Console.WriteLine("Created item in database with id: {0} Operation consumed {1} RUs.\n", personResponse.Resource.id, personResponse.RequestCharge);
+                }
+            }
+        }
+
+        private async Task ReadSample()
+        {
+            
+        }
+        
+        private List<Person> LoadJson()
+        {
+            var jsonText = File.ReadAllText("C:/Users/Rapha/source/repos/Cosmos-DB/Cosmos-DB/sample.json");
+            return JsonConvert.DeserializeObject<List<Person>>(jsonText);
         }
 
         /// <summary>
@@ -88,7 +139,7 @@ namespace Cosmos_DB
         private async Task CreateContainerAsync()
         {
             // Create a new container
-            this.container = await this.database.CreateContainerIfNotExistsAsync(containerId, "/LastName");
+            this.container = await this.database.CreateContainerIfNotExistsAsync(containerId, "/name");
             Console.WriteLine("Created Container: {0}\n", this.container.Id);
         }
 
@@ -196,22 +247,32 @@ namespace Cosmos_DB
         /// </summary>
         private async Task QueryItemsAsync()
         {
-            var sqlQueryText = "SELECT * FROM c WHERE c.LastName = 'Andersen'";
+            var sqlQueryText = "SELECT * FROM c";
 
             Console.WriteLine("Running query: {0}\n", sqlQueryText);
 
             QueryDefinition queryDefinition = new QueryDefinition(sqlQueryText);
-            FeedIterator<Family> queryResultSetIterator = this.container.GetItemQueryIterator<Family>(queryDefinition);
+            
+            Console.WriteLine("Query Definition: " + queryDefinition);
+            Console.WriteLine("Query Definition Query Text: " + queryDefinition.QueryText);
+            
+            FeedIterator<Person> queryResultSetIterator = this.container.GetItemQueryIterator<Person>(queryDefinition);
+            
+            Console.WriteLine("Query Result Set Iterator: " + queryResultSetIterator);
 
-            List<Family> families = new List<Family>();
+            List<Person> persons = new List<Person>();
 
             while (queryResultSetIterator.HasMoreResults)
             {
-                FeedResponse<Family> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                foreach (Family family in currentResultSet)
+                FeedResponse<Person> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                foreach (Person person in currentResultSet)
                 {
-                    families.Add(family);
-                    Console.WriteLine("\tRead {0}\n", family);
+                    Console.WriteLine();
+                    persons.Add(person);
+                    Console.WriteLine("\tRead {0}\n", person);
+                    Console.WriteLine("Person Nr. " + person.id);
+                    Console.WriteLine("Name: " + person.name);
+                    Console.WriteLine("Passion: " + person.passion);
                 }
             }
         }
@@ -237,14 +298,58 @@ namespace Cosmos_DB
         /// <summary>
         /// Delete an item in the container
         /// </summary>
-        private async Task DeleteFamilyItemAsync()
+        private async Task DeletePersonItemAsync()
         {
-            var partitionKeyValue = "Wakefield";
-            var familyId = "Wakefield.7";
+            var personId = "2";
+            var partitionKeyValue = "Dominik";
 
             // Delete an item. Note we must provide the partition key value and id of the item to delete
-            ItemResponse<Family> wakefieldFamilyResponse = await this.container.DeleteItemAsync<Family>(familyId, new PartitionKey(partitionKeyValue));
-            Console.WriteLine("Deleted Family [{0},{1}]\n", partitionKeyValue, familyId);
+            ItemResponse<Person> personResponse = await this.container.DeleteItemAsync<Person>(personId, new PartitionKey(partitionKeyValue));
+            Console.WriteLine("Deleted Person [{0},{1}]\n", personId, partitionKeyValue);
+        }
+        
+        /// <summary>
+        /// Insert an item in the container
+        /// </summary>
+        private async Task InsertPersonItemAsync()
+        {
+            var rene = new Person
+            {
+                id = "4",
+                name = "Rene",
+                passion = "Coden"
+            };
+
+            try
+            {
+                // Read the item to see if it exists
+                ItemResponse<Person> personResponse = await this.container.ReadItemAsync<Person>(rene.id, new PartitionKey(rene.name));
+                Console.WriteLine("Item in database with id: {0} already exists\n", personResponse.Resource.id);
+            }
+            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+            {
+                // Create an item in the container representing the Wakefield family. Note we provide the value of the partition key for this item, which is "Wakefield"
+                ItemResponse<Person> personResponse = await this.container.CreateItemAsync<Person>(rene, new PartitionKey(rene.name));
+
+                // Note that after creating the item, we can access the body of the item with the Resource property off the ItemResponse. We can also access the RequestCharge property to see the amount of RUs consumed on this request.
+                Console.WriteLine("Created item in database with id: {0} Operation consumed {1} RUs.\n", personResponse.Resource.id, personResponse.RequestCharge);
+            }
+        }
+        
+        /// <summary>
+        /// Insert an item in the container
+        /// </summary>
+        private async Task InsertPersonItemAsync_2()
+        {
+            var nico = new Person
+            {
+                id = "5",
+                name = "Nico",
+                passion = "Coden"
+            };
+            
+            Console.WriteLine("Works");
+            ItemResponse<Person> personResponse = await this.container.CreateItemAsync<Person>(nico, new PartitionKey(nico.name));
         }
     }
 }

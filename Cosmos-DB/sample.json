@@ -1,19 +1,17 @@
-﻿{
-  "array": [
+﻿[
     {
       "id": 1,
       "name": "Gianmarco",
-      "leidenschaft": "Netflix"
+      "passion": "Netflix"
     },
     {
       "id": 2,
       "name": "Dominik",
-      "leidenschaft": "Fußball"
+      "passion": "Fußball"
     },
     {
       "id": 3,
       "name": "Raphael",
-      "leidenschaft": "Masturbieren"
+      "passion": "Masturbieren",
     }
-  ]
-}
+]
