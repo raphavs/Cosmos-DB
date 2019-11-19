@@ -10,7 +10,7 @@
     "to": "13.03.2016",
     "type": "booking",
     "invoice_date": "15.03.2016",
-    "invoice_amount": 498
+    "invoice_amount": 498.00
   },
   {
     "id": "2",
@@ -49,7 +49,7 @@
     "to": "05.07.2016",
     "type": "booking",
     "invoice_date": "26.02.16",
-    "invoice_amount": 549
+    "invoice_amount": 549.00
   },
   {
     "id": "5",
