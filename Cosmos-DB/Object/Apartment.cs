@@ -11,7 +11,7 @@ namespace Cosmos_DB.Object
         public string city { get; set; }
         public string country { get; set; }
         public string apartment { get; set; }
-        public double qm { get; set; }
+        public int qm { get; set; }
         public double price { get; set; }
         public string description { get; set; }
         public string [] additional_equipment { get; set; }
