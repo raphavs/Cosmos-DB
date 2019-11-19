@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Cosmos_DB.Object
 {
@@ -8,7 +9,7 @@ namespace Cosmos_DB.Object
         public string id { get; set; }
         public string firstname { get; set; }
         public string lastname { get; set; }
-        public string date_of_birth { get; set; }
+        public DateTime date_of_birth { get; set; }
         public string email { get; set; }
         public string phone { get; set; }
         public string street { get; set; }
