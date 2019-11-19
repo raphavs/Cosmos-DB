@@ -160,7 +160,7 @@ namespace Cosmos_DB
                 id = "78",
                 firstname = "Rene",
                 lastname = "Borner",
-                date_of_birth = "30.12.1998",
+                date_of_birth = new DateTime(1998, 12, 30),
                 email = "mail@reneborner.de",
                 phone = "123456789",
                 street = "Highway 42",
