@@ -9,14 +9,16 @@ namespace Cosmos_DB.Object
         public string id { get; set; }
         public string firstname { get; set; }
         public string lastname { get; set; }
+        
+        public string fullname { get; set; }
         public DateTime date_of_birth { get; set; }
         public string email { get; set; }
         public string phone { get; set; }
         public string street { get; set; }
         public string city { get; set; }
-        public string plz { get; set; }
+        public string postcode { get; set; }
         public string country { get; set; }
-        public string blz { get; set; }
+        public string bank_code { get; set; }
         public string bank_account_number { get; set; }
     }
 }

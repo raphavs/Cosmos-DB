@@ -16,6 +16,5 @@ namespace Cosmos_DB.Object
         public string description { get; set; }
         public string [] additional_equipment { get; set; }
         public string [] pictures { get; set; }
-
     }
 }
