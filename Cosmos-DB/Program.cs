@@ -30,10 +30,14 @@ namespace Cosmos_DB
         private const string APARTMENT_CONTAINER_ID = "Apartment";
         private const string RESERVATION_CONTAINER_ID = "Reservation";
         
+        // Use Cases
+        private AddCustomer addCustomer;
+        
         public static async Task Main(string[] args)
         {
             try
             {
+                Console.WriteLine();
                 Console.WriteLine("Beginning operations...\n");
                 var p = new Program();
                 await p.GetStartedDemoAsync();
@@ -64,13 +68,65 @@ namespace Cosmos_DB
             this.cosmosClient = new CosmosClient(ENDPOINT_URI, PRIMARY_KEY);
             await this.CreateDatabaseAsync();
             await this.CreateContainerAsync();
+            
+            addCustomer = new AddCustomer(customerContainer);
+            
+            Console.WriteLine();
+            Console.WriteLine("Hello :)");
+            Console.WriteLine("I am an intelligent system to manage apartments and clients of a holiday resort.");
+
+            var input = "";
+
+            do
+            {
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("xxxxxxxxxxxxxxx   MENU   xxxxxxxxxxxxxxx");
+                Console.WriteLine();
+                Console.WriteLine("Please press s to search a customer.");
+                Console.WriteLine("Please press a to add a customer.");
+                Console.WriteLine("Please press r to reserve a apartment.");
+                Console.WriteLine("Please press d to delete a reservation.");
+                Console.WriteLine();
+                Console.WriteLine("xxxxxxxxxxxxxxx   MENU   xxxxxxxxxxxxxxx");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.Write("User input: ");
+                var action = Console.ReadLine();
+
+                switch (action)
+                {
+                    case "s":
+                        // useCaseSearchCustomer.Start();
+                        break;
+                    case "a":
+                        addCustomer.Start();
+                        break;
+                    case "r":
+                        // useCaseReserveApartment.Start();
+                        break;
+                    case "d":
+                        // useCaseDeleteReservation.Start();
+                        break;
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("Incorrect input!");
+                        break;
+                }
+                
+                Console.WriteLine();
+                Console.Write("Do want to continue? (y|n) ");
+                input = Console.ReadLine();
+                if (input == null) break;
+
+            } while (input.Equals("y"));
+
+            /*
             await this.QueryCustomerItemsAsync();
             await this.InsertCustomerItemAsync();
             await this.QueryCustomerItemsAsync();
             await this.DeleteCustomerItemAsync(); 
             await this.QueryCustomerItemsAsync();
-
-            /*
             await this.ReplaceFamilyItemAsync();
             */
         }
@@ -82,7 +138,7 @@ namespace Cosmos_DB
         {
             // Create a new database
             this.database = await this.cosmosClient.CreateDatabaseIfNotExistsAsync(DATABASE_ID);
-            Console.WriteLine("Created Database: {0}\n", this.database.Id);
+            Console.WriteLine("Created Database: {0}", this.database.Id);
         }
 
         /// <summary>
@@ -94,15 +150,15 @@ namespace Cosmos_DB
         {
             // Create container for customers
             this.customerContainer = await this.database.CreateContainerIfNotExistsAsync(CUSTOMER_CONTAINER_ID, "/country");
-            Console.WriteLine("Created Container: {0}\n", this.customerContainer.Id);
+            Console.WriteLine("Created Container: {0}", this.customerContainer.Id);
             
             // Create container for apartments
             this.apartmentContainer = await this.database.CreateContainerIfNotExistsAsync(APARTMENT_CONTAINER_ID, "/country");
-            Console.WriteLine("Created Container: {0}\n", this.apartmentContainer.Id);
+            Console.WriteLine("Created Container: {0}", this.apartmentContainer.Id);
             
             // Create container for reservations
             this.reservationContainer = await this.database.CreateContainerIfNotExistsAsync(RESERVATION_CONTAINER_ID, "/type");
-            Console.WriteLine("Created Container: {0}\n", this.reservationContainer.Id);
+            Console.WriteLine("Created Container: {0}", this.reservationContainer.Id);
         }
 
         /// <summary>
@@ -165,9 +221,9 @@ namespace Cosmos_DB
                 phone = "123456789",
                 street = "Highway 42",
                 city = "Constance",
-                plz = "78467",
+                postcode = "78467",
                 country = "Germany",
-                blz = "1234",
+                bank_code = "1234",
                 bank_account_number = "1234567"
             };
 
