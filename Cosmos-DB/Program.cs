@@ -32,6 +32,7 @@ namespace Cosmos_DB
         
         // Use Cases
         private AddCustomer addCustomer;
+        private SearchCustomer searchCustomer;
         
         public static async Task Main(string[] args)
         {
@@ -70,6 +71,7 @@ namespace Cosmos_DB
             await this.CreateContainerAsync();
             
             addCustomer = new AddCustomer(customerContainer);
+            searchCustomer = new SearchCustomer(customerContainer);
             
             Console.WriteLine();
             Console.WriteLine("Hello :)");
@@ -97,7 +99,7 @@ namespace Cosmos_DB
                 switch (action)
                 {
                     case "s":
-                        // useCaseSearchCustomer.Start();
+                         searchCustomer.Start();
                         break;
                     case "a":
                         addCustomer.Start();
@@ -119,7 +121,7 @@ namespace Cosmos_DB
                 input = Console.ReadLine();
                 if (input == null) break;
 
-            } while (input.Equals("y"));
+            }while (input.Equals("y"));
 
             /*
             await this.QueryCustomerItemsAsync();
