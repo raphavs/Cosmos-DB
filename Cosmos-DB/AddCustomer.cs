@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Text;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using Cosmos_DB.HelpData;
+using System.Threading;
+using Cosmos_DB.Help;
 using Cosmos_DB.Object;
 using Microsoft.Azure.Cosmos;
 
@@ -14,13 +15,15 @@ namespace Cosmos_DB
     public class AddCustomer
     {
         private readonly Container customerContainer;
+        private readonly EncryptService encryptService;
         private readonly Regex regexEmail;
         private readonly Regex regexPhone;
         private readonly List<Country> countries;
 
-        public AddCustomer(Container container)
+        public AddCustomer(Container container, EncryptService encryptService)
         {
             this.customerContainer = container;
+            this.encryptService = encryptService;
             this.countries = new List<Country>();
             this.regexEmail = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
             this.regexPhone = new Regex(@"^(\(?\+\d{2,3}\)?|\d)(\s|\-)?\d{3,4}(\s|\-)?\d{6,8}$");
@@ -34,6 +37,7 @@ namespace Cosmos_DB
             
             var customer = CreateCustomer();
    
+            var sha256 = SHA256.Create();
             var valueToHash = string.Concat(customer.firstname, customer.lastname, customer.email);
             var id = "";
             
@@ -41,7 +45,12 @@ namespace Cosmos_DB
             {
                 while (true)
                 {
-                    id = GenerateSha512(valueToHash);
+                    id = encryptService.GenerateHash(sha256, valueToHash);
+                    
+                    Console.WriteLine();
+                    Console.Write("HASH: " + id);
+                    Console.WriteLine();
+                    Thread.Sleep(4000);
 
                     // Check if the ID is already assigned
                     var customerResponse = await this.customerContainer.ReadItemAsync<Customer>(id, new PartitionKey(customer.country));
@@ -224,6 +233,7 @@ namespace Cosmos_DB
             {
                 firstname = firstname,
                 lastname = lastname,
+                fullname = firstname + " " + lastname,
                 date_of_birth = dateOfBirth,
                 email = email,
                 phone = phone,
@@ -234,15 +244,6 @@ namespace Cosmos_DB
                 bank_code = bankCode,
                 bank_account_number = bankAccountNumber
             };
-        }
-        
-        private static string GenerateSha512(string value)
-        {
-            var bytesToHash = Encoding.UTF8.GetBytes(value);
-            using var hashBuilder = System.Security.Cryptography.SHA512.Create();
-            var hashedBytes = hashBuilder.ComputeHash(bytesToHash);
-
-            return hashedBytes.ToString();
         }
 
         private async void SetCountries()
