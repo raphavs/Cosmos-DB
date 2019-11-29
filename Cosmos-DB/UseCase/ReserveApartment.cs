@@ -2,7 +2,7 @@
 using Cosmos_DB.Object;
 using Microsoft.Azure.Cosmos;
 
-namespace Cosmos_DB
+namespace Cosmos_DB.UseCase
 {
     public class ReserveApartment
     {

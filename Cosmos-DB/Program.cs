@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading;
 using Cosmos_DB.Help;
 using Cosmos_DB.Object;
+using Cosmos_DB.UseCase;
 using Microsoft.Azure.Cosmos;
 
 namespace Cosmos_DB
