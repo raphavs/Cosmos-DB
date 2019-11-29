@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Net;
+using System.Threading;
+using Cosmos_DB.Help;
 using Cosmos_DB.Object;
+using Cosmos_DB.UseCase;
 using Microsoft.Azure.Cosmos;
 
 namespace Cosmos_DB
@@ -18,6 +21,9 @@ namespace Cosmos_DB
 
         // The database we will create
         private Database database;
+        
+        // The service for encrypting
+        private EncryptService encryptService;
 
         // The containers we will create
         private Container customerContainer;
@@ -70,7 +76,9 @@ namespace Cosmos_DB
             await this.CreateDatabaseAsync();
             await this.CreateContainerAsync();
             
-            addCustomer = new AddCustomer(customerContainer);
+            encryptService = new EncryptService();
+            
+            addCustomer = new AddCustomer(customerContainer, encryptService);
             reserveApartment = new ReserveApartment(customerContainer, apartmentContainer, reservationContainer);
             
             Console.WriteLine();
@@ -117,6 +125,7 @@ namespace Cosmos_DB
                 }
                 
                 Console.WriteLine();
+                Thread.Sleep(2000);
                 Console.Write("Do want to continue? (y|n) ");
                 input = Console.ReadLine();
                 if (input == null) break;
