@@ -46,11 +46,6 @@ namespace Cosmos_DB.UseCase
                 while (true)
                 {
                     id = encryptService.GenerateHash(sha256, valueToHash);
-                    
-                    Console.WriteLine();
-                    Console.Write("HASH: " + id);
-                    Console.WriteLine();
-                    Thread.Sleep(4000);
 
                     // Check if the ID is already assigned
                     var customerResponse = await this.customerContainer.ReadItemAsync<Customer>(id, new PartitionKey(customer.country));
