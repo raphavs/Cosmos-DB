@@ -32,6 +32,7 @@ namespace Cosmos_DB
         
         // Use Cases
         private AddCustomer addCustomer;
+        private DeleteReservation deleteReservation;
         
         public static async Task Main(string[] args)
         {
@@ -70,6 +71,7 @@ namespace Cosmos_DB
             await this.CreateContainerAsync();
             
             addCustomer = new AddCustomer(customerContainer);
+            deleteReservation = new DeleteReservation(reservationContainer);
             
             Console.WriteLine();
             Console.WriteLine("Hello :)");
@@ -106,7 +108,7 @@ namespace Cosmos_DB
                         // useCaseReserveApartment.Start();
                         break;
                     case "d":
-                        // useCaseDeleteReservation.Start();
+                        deleteReservation.Start();
                         break;
                     default:
                         Console.WriteLine();
