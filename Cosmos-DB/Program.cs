@@ -79,7 +79,7 @@ namespace Cosmos_DB
             encryptService = new EncryptService();
             
             addCustomer = new AddCustomer(customerContainer, encryptService);
-            reserveApartment = new ReserveApartment(customerContainer, apartmentContainer, reservationContainer);
+            reserveApartment = new ReserveApartment(customerContainer, apartmentContainer, reservationContainer, encryptService);
             
             Console.WriteLine();
             Console.WriteLine("Hello :)");

@@ -76,8 +76,7 @@ namespace Cosmos_DB.UseCase
             Console.Write("Please enter your LASTNAME: ");
             var lastname = Console.ReadLine();
             Console.WriteLine();
-
-            // Date can be set without problems, since it is overwritten in any case.
+            
             var dateOfBirth = new DateTime();
             var dateFormats = new[] {"dd/MM/yyyy"};
             var dateIsValid = false;
