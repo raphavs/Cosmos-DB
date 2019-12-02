@@ -12,8 +12,8 @@ namespace Cosmos_DB.Object
         public DateTime? booking_date { get; set; }
         public string invoice_number { get; set; }
         public DateTime? receipt_of_payment { get; set; }
-        public DateTime? from { get; set; }
-        public DateTime? to { get; set; }
+        public DateTime from { get; set; }
+        public DateTime to { get; set; }
         public string type { get; set; }
         public DateTime? invoice_date { get; set; }
         public double? invoice_amount { get; set; }
