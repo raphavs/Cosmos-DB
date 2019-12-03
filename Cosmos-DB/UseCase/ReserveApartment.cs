@@ -1,12 +1,12 @@
 ﻿﻿using System;
- using System.Collections.Generic;
- using System.Globalization;
- using System.Linq;
- using System.Net;
- using System.Security.Cryptography;
- using System.Threading.Tasks;
- using Cosmos_DB.Help;
- using Cosmos_DB.Object;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Net;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
+using Cosmos_DB.Help;
+using Cosmos_DB.Object;
 using Microsoft.Azure.Cosmos;
 
 namespace Cosmos_DB.UseCase
