@@ -259,5 +259,10 @@ namespace Cosmos_DB.UseCase
 
             return date;
         }
+
+        private async void SetLIsts()
+        {
+            
+        }
     }
 }

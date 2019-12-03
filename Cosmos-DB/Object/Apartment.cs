@@ -1,11 +1,9 @@
-using Newtonsoft.Json;
+using System;
 
 namespace Cosmos_DB.Object
 {
-    public class Apartment
+    public class Apartment : ObjectBase
     {
-        [JsonProperty(PropertyName = "id")]
-        public string id { get; set; }
         public string plz { get; set; }
         public string street { get; set; }
         public string city { get; set; }

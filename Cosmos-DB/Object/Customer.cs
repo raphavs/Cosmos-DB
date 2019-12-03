@@ -1,12 +1,9 @@
 ﻿using System;
-using Newtonsoft.Json;
 
 namespace Cosmos_DB.Object
 {
-    public class Customer
+    public class Customer : ObjectBase
     {
-        [JsonProperty(PropertyName = "id")]
-        public string id { get; set; }
         public string firstname { get; set; }
         public string lastname { get; set; }
         public string fullname { get; set; }
