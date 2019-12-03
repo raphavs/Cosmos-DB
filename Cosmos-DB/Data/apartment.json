@@ -50,7 +50,7 @@
     "additional_equipment": [
       "Sauna"
     ],
-    "pictures": null
+    "pictures": []
   },
   {
     "id": "4",
@@ -61,11 +61,9 @@
     "apartment_number": "4",
     "qm": 100,
     "price": 249.00,
-    "description": [
-      "Right by the Sea"
-    ],
-    "additional_equipment": null,
-    "pictures": null
+    "description": "Right by the Sea",
+    "additional_equipment": [],
+    "pictures": []
   },
   {
     "id": "5",
@@ -98,7 +96,7 @@
     "additional_equipment": [
       "Swimming Pool"
     ],
-    "pictures": null
+    "pictures": []
   },
   {
     "id": "7",
@@ -113,7 +111,7 @@
     "additional_equipment": [
       "Swimming Pool"
     ],
-    "pictures": null
+    "pictures": []
   },
   {
     "id": "8",
@@ -148,7 +146,7 @@
       "Garage",
       "Swimming Pool"
     ],
-    "pictures": null
+    "pictures": []
   },
   {
     "id": "10",
@@ -160,8 +158,8 @@
     "description": "Cottage on the Beach",
     "city": "Barcelona",
     "country": "Spain",
-    "additional_equipment": null,
-    "pictures": null
+    "additional_equipment": [],
+    "pictures": []
   },
   {
     "id": "11",
@@ -176,6 +174,6 @@
     "additional_equipment": [
       "Swimming Pool"
     ],
-    "pictures": null
+    "pictures": []
   }
 ]
