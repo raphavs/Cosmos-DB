@@ -53,7 +53,7 @@ namespace Cosmos_DB
                 Console.Write("Tyoe input: ");
                 var partitionKeyValue = Console.ReadLine();
 
-                DeleteReservationItemAsync(customerId,partitionKeyValue);
+                DeleteReservationItemAsync(customerId,partitionKeyValue).GetAwaiter().GetResult();
 
             
         }
