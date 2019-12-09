@@ -30,13 +30,14 @@ namespace Cosmos_DB
            string name = Console.ReadLine();
            //parse to fullname
         
-        
-           string sqlStatement ="SELECT * FROM customer c WHERE CONTAINS (UPPER(c.fullname), '"+ name.ToUpper() +"')";
+           string sqlStatement ="SELECT * FROM customer c WHERE CONTAINS (UPPER(c.fullname), '"+ name.ToUpper() +"') OR CONTAINS (UPPER(c.lastname), '" + name.ToUpper() +"')";
+
+           //string sqlStatement ="SELECT * FROM customer c WHERE CONTAINS (UPPER(c.fullname), '"+ name.ToUpper() +"')";
            // OR CONTAINS (UPPER(c.lastname), '" + name.ToUpper() +"')";
            //string sqlStatement ="SELECT * FROM customer c WHERE CONCAT(c.firstname,";
            //string sqlStatement = "SELECT * FROM customer c WHERE CONTAINS (c.lastname, 'Burk') OR CONTAINS (c.firstname, 'Ji')";
            Console.WriteLine(sqlStatement);
-            Console.WriteLine("Running query: {0}\n", sqlStatement);
+           Console.WriteLine("Running query: {0}\n", sqlStatement);
 
             var queryDefinition = new QueryDefinition(sqlStatement);
             var queryResultSetIterator = this.customerContainer.GetItemQueryIterator<Customer>(queryDefinition);
@@ -60,9 +61,7 @@ namespace Cosmos_DB
                     Console.WriteLine();
                 }
             }
-
         }
-        
         }
     
     }
