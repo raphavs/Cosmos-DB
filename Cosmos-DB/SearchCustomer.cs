@@ -21,34 +21,26 @@ namespace Cosmos_DB
         }
 
         public async void Start()
-        
-            //USE CASE 2 - Search customer
-            //var customer = SearchCustomer();
-    
         {
            Console.WriteLine("Please enter the string you are searching for: ");
-           string name = Console.ReadLine();
-           //parse to fullname
-        
-           string sqlStatement ="SELECT * FROM customer c WHERE CONTAINS (UPPER(c.fullname), '"+ name.ToUpper() +"') OR CONTAINS (UPPER(c.lastname), '" + name.ToUpper() +"')";
+           var name = Console.ReadLine();
 
-           //string sqlStatement ="SELECT * FROM customer c WHERE CONTAINS (UPPER(c.fullname), '"+ name.ToUpper() +"')";
-           // OR CONTAINS (UPPER(c.lastname), '" + name.ToUpper() +"')";
-           //string sqlStatement ="SELECT * FROM customer c WHERE CONCAT(c.firstname,";
-           //string sqlStatement = "SELECT * FROM customer c WHERE CONTAINS (c.lastname, 'Burk') OR CONTAINS (c.firstname, 'Ji')";
+           //Search Customer Query
+           var sqlStatement ="SELECT * FROM customer c WHERE CONTAINS (UPPER(c.firstname), '"+ name.ToUpper() +"') OR CONTAINS (UPPER(c.lastname), '" + name.ToUpper() +"')";
+
            Console.WriteLine(sqlStatement);
            Console.WriteLine("Running query: {0}\n", sqlStatement);
 
-            var queryDefinition = new QueryDefinition(sqlStatement);
-            var queryResultSetIterator = this.customerContainer.GetItemQueryIterator<Customer>(queryDefinition);
+           var queryDefinition = new QueryDefinition(sqlStatement);
+           var queryResultSetIterator = this.customerContainer.GetItemQueryIterator<Customer>(queryDefinition);
             
             while (queryResultSetIterator.HasMoreResults)
             {
                 var currentResultSet = await queryResultSetIterator.ReadNextAsync();
                 foreach (var customer in currentResultSet)
                 {
-                    Console.WriteLine("name:" + customer.fullname);
-                    Console.WriteLine("Kundennummer: " + customer.id);
+                    Console.WriteLine("name:" + customer.firstname + " " + customer.lastname);
+                    Console.WriteLine("customer number: " + customer.id);
                     Console.WriteLine("email: " + customer.email);
                     Console.WriteLine("birthday: " + customer.date_of_birth);
                     Console.WriteLine("phone number: " + customer.phone);
@@ -62,6 +54,5 @@ namespace Cosmos_DB
                 }
             }
         }
-        }
-    
     }
+}
