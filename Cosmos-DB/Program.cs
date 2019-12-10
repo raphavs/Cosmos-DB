@@ -38,8 +38,8 @@ namespace Cosmos_DB
         
         // Use Cases
         private AddCustomer addCustomer;
-        private DeleteReservation deleteReservation;
         private ReserveApartment reserveApartment;
+        private DeleteReservation deleteReservation;
         
         public static async Task Main(string[] args)
         {
@@ -76,13 +76,12 @@ namespace Cosmos_DB
             this.cosmosClient = new CosmosClient(ENDPOINT_URI, PRIMARY_KEY);
             await this.CreateDatabaseAsync();
             await this.CreateContainerAsync();
-            
-            deleteReservation = new DeleteReservation(reservationContainer);
 
             encryptService = new EncryptService();
             
             addCustomer = new AddCustomer(customerContainer, encryptService);
             reserveApartment = new ReserveApartment(customerContainer, apartmentContainer, reservationContainer);
+            deleteReservation = new DeleteReservation(reservationContainer);
             
             Console.WriteLine();
             Console.WriteLine("Hello :)");
