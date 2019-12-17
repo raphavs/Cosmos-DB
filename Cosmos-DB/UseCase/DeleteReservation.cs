@@ -18,34 +18,10 @@ namespace Cosmos_DB.UseCase
             this.reservations = new List<Reservation>();
         }
 
-        public async void Start()
+        public void Start()
         {
-            const string sqlQueryText = "SELECT * FROM c";
-            var queryDefinition = new QueryDefinition(sqlQueryText);
-            var queryResultSetIterator = this.reservationContainer.GetItemQueryIterator<Reservation>(queryDefinition);
-            
-            var index = 0;
-            while (queryResultSetIterator.HasMoreResults)
-            {
-                var currentResultSet = await queryResultSetIterator.ReadNextAsync();
-
-                //Reservation Output
-                foreach (var reservation in currentResultSet)
-                {
-                    index++;
-                    Console.WriteLine("-----------------------");
-                    Console.WriteLine(index + ". Reservation");
-                    Console.WriteLine("Customer ID: " + reservation.customer_id);
-                    Console.WriteLine("Apartment ID: " + reservation.apartment_id);
-                    Console.WriteLine("Booking Date: " + reservation.booking_date);
-                    Console.WriteLine(reservation.type.Equals("Booking") ? "Booked" : "Reserved" + " in the period from " + reservation.from + " to " + reservation.to);
-                    Console.WriteLine("------------------------");
-                    Console.WriteLine();
-
-                    // Add reservation
-                    reservations.Add(reservation);
-                }
-            }
+            // Set reservations
+            SetReservations().GetAwaiter().GetResult();
             
             // Select reservation
             var indexReservation = -1;
@@ -64,14 +40,42 @@ namespace Cosmos_DB.UseCase
             }
             var selectedReservation = reservations.ElementAt(indexReservation - 1);
             
-            DeleteReservationItemAsync(selectedReservation).GetAwaiter().GetResult();
+            // Delete reservation
+            Delete(selectedReservation).GetAwaiter().GetResult();
+        }
+
+        private async Task SetReservations()
+        {
+            const string sqlQueryText = "SELECT * FROM c";
+            var queryDefinition = new QueryDefinition(sqlQueryText);
+            var queryResultSetIterator = this.reservationContainer.GetItemQueryIterator<Reservation>(queryDefinition);
+            
+            var index = 0;
+            while (queryResultSetIterator.HasMoreResults)
+            {
+                var currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                foreach (var reservation in currentResultSet)
+                {
+                    index++;
+                    Console.WriteLine("-----------------------");
+                    Console.WriteLine(index + ". Reservation");
+                    Console.WriteLine("Customer ID: " + reservation.customer_id);
+                    Console.WriteLine("Apartment ID: " + reservation.apartment_id);
+                    Console.WriteLine("Booking Date: " + reservation.booking_date);
+                    Console.WriteLine(reservation.type.Equals("Booking") ? "Booked" : "Reserved" + " in the period from " + reservation.from + " to " + reservation.to);
+                    Console.WriteLine("------------------------");
+                    Console.WriteLine();
+
+                    // Add reservation
+                    reservations.Add(reservation);
+                }
+            }
         }
         
-        //Function who delete the reservation
-        private async Task DeleteReservationItemAsync(Reservation reservation)
+        private async Task Delete(Reservation reservation)
         {
             await this.reservationContainer.DeleteItemAsync<Reservation>(reservation.id, new PartitionKey(reservation.type));
-            Console.WriteLine("Deleted reservation [{0},{1}]\n", reservation.id, reservation.type);
+            Console.WriteLine("Reservation [{0},{1}] successfully deleted\n", reservation.id, reservation.type);
         }
     }
 }
