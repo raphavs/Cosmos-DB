@@ -3,37 +3,51 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Text;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using Cosmos_DB.HelpData;
+using System.Threading.Tasks;
+using Cosmos_DB.Help;
 using Cosmos_DB.Object;
 using Microsoft.Azure.Cosmos;
 
-namespace Cosmos_DB
+namespace Cosmos_DB.UseCase
 {
     public class AddCustomer
     {
         private readonly Container customerContainer;
+        private readonly EncryptService encryptService;
         private readonly Regex regexEmail;
         private readonly Regex regexPhone;
         private readonly List<Country> countries;
 
-        public AddCustomer(Container container)
+        public AddCustomer(Container container, EncryptService encryptService)
         {
             this.customerContainer = container;
+            this.encryptService = encryptService;
             this.countries = new List<Country>();
             this.regexEmail = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
             this.regexPhone = new Regex(@"^(\(?\+\d{2,3}\)?|\d)(\s|\-)?\d{3,4}(\s|\-)?\d{6,8}$");
         }
         
-        public async void Start()
+        public void Start()
         {
             Console.WriteLine();
             Console.WriteLine(">>> ADD CUSTOMER");
             Console.WriteLine();
             
-            var customer = CreateCustomer();
+            // Collect all countries, cities and postcodes to make them selectable for the user
+            SetCountries().GetAwaiter().GetResult();
+            
+            // Create object
+            var customer = GetCustomer();
    
+            // Add customer to database
+            CreateCustomer(customer).GetAwaiter().GetResult();
+        }
+
+        private async Task CreateCustomer(Customer customer)
+        {
+            var sha256 = SHA256.Create();
             var valueToHash = string.Concat(customer.firstname, customer.lastname, customer.email);
             var id = "";
             
@@ -41,7 +55,7 @@ namespace Cosmos_DB
             {
                 while (true)
                 {
-                    id = GenerateSha512(valueToHash);
+                    id = encryptService.GenerateHash(sha256, valueToHash);
 
                     // Check if the ID is already assigned
                     var customerResponse = await this.customerContainer.ReadItemAsync<Customer>(id, new PartitionKey(customer.country));
@@ -60,11 +74,8 @@ namespace Cosmos_DB
             }
         }
 
-        private Customer CreateCustomer()
+        private Customer GetCustomer()
         {
-            // Collect all countries, cities and postcodes to make them selectable for the user
-            SetCountries();
-
             Console.Write("Please enter your FIRSTNAME: ");
             var firstname = Console.ReadLine();
             Console.WriteLine();
@@ -72,8 +83,7 @@ namespace Cosmos_DB
             Console.Write("Please enter your LASTNAME: ");
             var lastname = Console.ReadLine();
             Console.WriteLine();
-
-            // Date can be set without problems, since it is overwritten in any case.
+            
             var dateOfBirth = new DateTime();
             var dateFormats = new[] {"dd/MM/yyyy"};
             var dateIsValid = false;
@@ -235,17 +245,8 @@ namespace Cosmos_DB
                 bank_account_number = bankAccountNumber
             };
         }
-        
-        private static string GenerateSha512(string value)
-        {
-            var bytesToHash = Encoding.UTF8.GetBytes(value);
-            using var hashBuilder = System.Security.Cryptography.SHA512.Create();
-            var hashedBytes = hashBuilder.ComputeHash(bytesToHash);
 
-            return hashedBytes.ToString();
-        }
-
-        private async void SetCountries()
+        private async Task SetCountries()
         {
             const string sqlQueryText = "SELECT * FROM c";
             var queryDefinition = new QueryDefinition(sqlQueryText);

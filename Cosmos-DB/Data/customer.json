@@ -7,11 +7,10 @@
     "country": "Germany",
     "firstname": "Karl",
     "lastname": "Napf",
-    "fullname": "Karl Napf",
     "bank_code": 69271723,
     "email": "knapf@gmx.de",
     "phone": "07531 123456",
-    "date_of_birth": "01.01.1960",
+    "date_of_birth": "1960-01-01T00:00:00.365Z",
     "bank_account_number": 7823212
   },
   {
@@ -22,11 +21,10 @@
     "country": "Germany",
     "firstname": "Hans",
     "lastname": "Meier",
-    "fullname": "Hans Meier",
     "bank_code": 32793968,
     "email": "meiers.hans@t-online.de",
     "phone": "06221-999888",
-    "date_of_birth": "02.01.1975",
+    "date_of_birth": "1975-01-02T00:00:00.365Z",
     "bank_account_number": 8929368
   },
   {
@@ -37,11 +35,10 @@
     "country": "Germany",
     "firstname": "Franz",
     "lastname": "Huber",
-    "fullname": "Franz Huber",
     "bank_code": 69271723,
     "email": "huber@t-online.de",
     "phone": "0711-554673",
-    "date_of_birth": "03.01.1980",
+    "date_of_birth": "1980-01-03T00:00:00.365Z",
     "bank_account_number": 1347291
   },
   {
@@ -51,12 +48,11 @@
     "country": "Switzerland",
     "firstname": "Klaus",
     "lastname": "Eber",
-    "fullname": "Klaus Eber",
     "bank_code": 29788431,
     "email": "eber@bluewin.ch",
     "phone": "+41-171-9864785",
     "postcode": "3001",
-    "date_of_birth": "04.01.1985",
+    "date_of_birth": "1985-01-04T00:00:00.365Z",
     "bank_account_number": 8792978
   },
   {
@@ -66,12 +62,11 @@
     "country": "Switzerland",
     "firstname": "Egon",
     "lastname": "Meier",
-    "fullname": "Egon Meier",
     "bank_code": 87890271,
     "email": "meier@gmail. com",
     "phone": "+41-171-9864785",
     "postcode": "8001",
-    "date_of_birth": "05.01.1990",
+    "date_of_birth": "1990-01-05T00:00:00.365Z",
     "bank_account_number": 9082780
   },
   {
@@ -82,11 +77,10 @@
     "country": "Germany",
     "firstname": "Jim",
     "lastname": "Knopf",
-    "fullname": "Jim Knopf",
     "bank_code": 69271723,
     "email": "knapf@gmx.de",
     "phone": "0171-9876543",
-    "date_of_birth": "06.01.1995",
+    "date_of_birth": "1995-01-06T00:00:00.365Z",
     "bank_account_number": 7322890
   }
 ]

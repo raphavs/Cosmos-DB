@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Cosmos_DB.HelpData
+namespace Cosmos_DB.Help
 {
     public class Country
     {

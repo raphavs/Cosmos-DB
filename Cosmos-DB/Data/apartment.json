@@ -47,8 +47,10 @@
     "qm": 150,
     "price": 249.00,
     "description": "In the Snow",
-    "additional_equipment": "Sauna",
-    "pictures": null
+    "additional_equipment": [
+      "Sauna"
+    ],
+    "pictures": []
   },
   {
     "id": "4",
@@ -60,8 +62,8 @@
     "qm": 100,
     "price": 249.00,
     "description": "Right by the Sea",
-    "additional_equipment": null,
-    "pictures": null
+    "additional_equipment": [],
+    "pictures": []
   },
   {
     "id": "5",
@@ -77,7 +79,9 @@
       "Childcare",
       "Swimming Pool"
     ],
-    "pictures": "garage.gif"
+    "pictures": [
+      "garage.gif"
+    ]
   },
   {
     "id": "6",
@@ -89,8 +93,10 @@
     "qm": 70,
     "price": 549.00,
     "description": "With View to the Eiffel Tower",
-    "additional_equipment": "Swimming Pool",
-    "pictures": null
+    "additional_equipment": [
+      "Swimming Pool"
+    ],
+    "pictures": []
   },
   {
     "id": "7",
@@ -102,8 +108,10 @@
     "description": "Central Penthouse Apartment",
     "city": "Paris",
     "country": "France",
-    "additional_equipment": "Swimming Pool",
-    "pictures": null
+    "additional_equipment": [
+      "Swimming Pool"
+    ],
+    "pictures": []
   },
   {
     "id": "8",
@@ -120,7 +128,9 @@
       "Cleaning",
       "Rooftop Terrace"
     ],
-    "pictures": "rooftop_terrace.jpg"
+    "pictures": [
+      "rooftop_terrace.jpg"
+    ]
   },
   {
     "id": "9",
@@ -136,7 +146,7 @@
       "Garage",
       "Swimming Pool"
     ],
-    "pictures": null
+    "pictures": []
   },
   {
     "id": "10",
@@ -148,8 +158,8 @@
     "description": "Cottage on the Beach",
     "city": "Barcelona",
     "country": "Spain",
-    "additional_equipment": null,
-    "pictures": null
+    "additional_equipment": [],
+    "pictures": []
   },
   {
     "id": "11",
@@ -161,7 +171,9 @@
     "description": "Beach Bungalow",
     "city": "Antalya",
     "country": "Turkey",
-    "additional_equipment": "Swimming Pool",
-    "pictures": null
+    "additional_equipment": [
+      "Swimming Pool"
+    ],
+    "pictures": []
   }
 ]
