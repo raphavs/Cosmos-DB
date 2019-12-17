@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Net;
 using Cosmos_DB.Help;
-using Cosmos_DB.Object;
 using Cosmos_DB.UseCase;
 using Microsoft.Azure.Cosmos;
 
@@ -78,7 +76,6 @@ namespace Cosmos_DB
             await this.CreateDatabaseAsync();
             await this.CreateContainerAsync();
             
-            addCustomer = new AddCustomer(customerContainer);
             encryptService = new EncryptService();
             
             addCustomer = new AddCustomer(customerContainer, encryptService);
