@@ -9,7 +9,7 @@ namespace Cosmos_DB.Object
         public string id { get; set; }
         public string customer_id { get; set; }
         public string apartment_id { get; set; }
-        public DateTime? booking_date { get; set; }
+        public DateTime booking_date { get; set; }
         public string invoice_number { get; set; }
         public DateTime? receipt_of_payment { get; set; }
         public DateTime from { get; set; }
