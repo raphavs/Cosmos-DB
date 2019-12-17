@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Net;
-using Cosmos_DB.Object;
 using Microsoft.Azure.Cosmos;
 
 namespace Cosmos_DB
@@ -10,6 +8,7 @@ namespace Cosmos_DB
     {
         // The Azure Cosmos DB endpoint for running this sample.
         private const string ENDPOINT_URI = "https://dominik.documents.azure.com:443/";
+        
         // The primary key for the Azure Cosmos account.
         private const string PRIMARY_KEY = "2re6gMOGOcTjdDpRle0PpsI5sFGv1WNdiYdr0yHffSGA5voKqcMxyMoSWP9GsPGKczpWYqVlW6dqAvCxxhjBdQ==";
 
@@ -78,7 +77,6 @@ namespace Cosmos_DB
             Console.WriteLine("I am an intelligent system to manage apartments and clients of a holiday resort.");
 
             var input = "";
-
             do
             {
                 Console.WriteLine();
@@ -99,7 +97,7 @@ namespace Cosmos_DB
                 switch (action)
                 {
                     case "s":
-                         searchCustomer.Start();
+                        searchCustomer.Start();
                         break;
                     case "a":
                         addCustomer.Start();
@@ -121,16 +119,7 @@ namespace Cosmos_DB
                 input = Console.ReadLine();
                 if (input == null) break;
 
-            }while (input.Equals("y"));
-
-            /*
-            await this.QueryCustomerItemsAsync();
-            await this.InsertCustomerItemAsync();
-            await this.QueryCustomerItemsAsync();
-            await this.DeleteCustomerItemAsync(); 
-            await this.QueryCustomerItemsAsync();
-            await this.ReplaceFamilyItemAsync();
-            */
+            } while (input.Equals("y"));
         }
 
         /// <summary>
@@ -145,7 +134,6 @@ namespace Cosmos_DB
 
         /// <summary>
         /// Create the containers if they do not exist. 
-        /// Specify "/country" as the partition key to ensure good distribution of requests and storage.
         /// </summary>
         /// <returns></returns>
         private async Task CreateContainerAsync()
@@ -161,101 +149,6 @@ namespace Cosmos_DB
             // Create container for reservations
             this.reservationContainer = await this.database.CreateContainerIfNotExistsAsync(RESERVATION_CONTAINER_ID, "/type");
             Console.WriteLine("Created Container: {0}", this.reservationContainer.Id);
-        }
-
-        /// <summary>
-        /// Run a query (using Azure Cosmos DB SQL syntax) against the container
-        /// </summary>
-        private async Task QueryCustomerItemsAsync()
-        {
-            const string sqlQueryText = "SELECT * FROM c";
-            Console.WriteLine("Running query: {0}\n", sqlQueryText);
-
-            var queryDefinition = new QueryDefinition(sqlQueryText);
-            var queryResultSetIterator = this.customerContainer.GetItemQueryIterator<Customer>(queryDefinition);
-
-            while (queryResultSetIterator.HasMoreResults)
-            {
-                var currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                foreach (var customer in currentResultSet)
-                {
-                    Console.WriteLine(customer.id);
-                    Console.WriteLine(customer.firstname + " " + customer.lastname);
-                    Console.WriteLine(customer.email);
-                    Console.WriteLine();
-                }
-            }
-        }
-
-        /*
-        ++++++ UPDATE ITEM: ++++++
-        /// <summary>
-        /// Replace an item in the container
-        /// </summary>
-        private async Task ReplaceFamilyItemAsync()
-        {
-            ItemResponse<Family> wakefieldFamilyResponse = await this.container.ReadItemAsync<Family>("Wakefield.7", new PartitionKey("Wakefield"));
-            var itemBody = wakefieldFamilyResponse.Resource;
-
-            // update registration status from false to true
-            itemBody.IsRegistered = true;
-            // update grade of child
-            itemBody.Children[0].Grade = 6;
-
-            // replace the item with the updated content
-            wakefieldFamilyResponse = await this.container.ReplaceItemAsync<Family>(itemBody, itemBody.Id, new PartitionKey(itemBody.LastName));
-            Console.WriteLine("Updated Family [{0},{1}].\n \tBody is now: {2}\n", itemBody.LastName, itemBody.Id, wakefieldFamilyResponse.Resource);
-        }
-        */
-
-        /// <summary>
-        /// Insert an item in the container
-        /// </summary>
-        private async Task InsertCustomerItemAsync()
-        {
-            var customer = new Customer
-            {
-                id = "78",
-                firstname = "Rene",
-                lastname = "Borner",
-                date_of_birth = new DateTime(1998, 12, 30),
-                email = "mail@reneborner.de",
-                phone = "123456789",
-                street = "Highway 42",
-                city = "Constance",
-                postcode = "78467",
-                country = "Germany",
-                bank_code = "1234",
-                bank_account_number = "1234567"
-            };
-
-            try
-            {
-                // Read the item to see if it exists
-                var customerResponse = await this.customerContainer.ReadItemAsync<Customer>(customer.id, new PartitionKey(customer.country));
-                Console.WriteLine("Item in database with id: {0} already exists\n", customerResponse.Resource.id);
-            }
-            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
-            {
-                // Create an item in the container representing the Rene customer. Note we provide the value of the partition key for this item, which is "Germany"
-                var customerResponse = await this.customerContainer.CreateItemAsync<Customer>(customer, new PartitionKey(customer.country));
-
-                // Note that after creating the item, we can access the body of the item with the Resource property off the ItemResponse. We can also access the RequestCharge property to see the amount of RUs consumed on this request.
-                Console.WriteLine("Created item in database with id: {0} Operation consumed {1} RUs.\n", customerResponse.Resource.id, customerResponse.RequestCharge);
-            }
-        }
-        
-        /// <summary>
-        /// Delete an item in the container
-        /// </summary>
-        private async Task DeleteCustomerItemAsync()
-        {
-            const string customerId = "1";
-            const string partitionKeyValue = "Germany";
-
-            // Delete an item. Note we must provide the partition key value and id of the item to delete
-            await this.customerContainer.DeleteItemAsync<Customer>(customerId, new PartitionKey(partitionKeyValue));
-            Console.WriteLine("Deleted Customer [{0},{1}]\n", customerId, partitionKeyValue);
         }
     }
 }
