@@ -30,7 +30,7 @@ namespace Cosmos_DB
 
         private async Task SelectCustomers(string input)
         {
-            var sqlStatement ="SELECT * FROM customer c WHERE CONTAINS(UPPER(c.firstname), '" + input.ToUpper() + "') OR " +
+            var sqlStatement ="SELECT * FROM c WHERE CONTAINS(UPPER(c.firstname), '" + input.ToUpper() + "') OR " +
                               "CONTAINS(UPPER(c.lastname), '" + input.ToUpper() + "') OR " +
                               "CONTAINS(CONCAT(UPPER(c.firstname), ' ', UPPER(c.lastname)), '" + input.ToUpper() + "')";
             var queryDefinition = new QueryDefinition(sqlStatement);
