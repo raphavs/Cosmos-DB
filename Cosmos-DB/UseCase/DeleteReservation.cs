@@ -29,6 +29,7 @@ namespace Cosmos_DB.UseCase
             {
                 var currentResultSet = await queryResultSetIterator.ReadNextAsync();
 
+                //Reservation Output
                 foreach (var reservation in currentResultSet)
                 {
                     index++;
@@ -46,6 +47,7 @@ namespace Cosmos_DB.UseCase
                 }
             }
             
+            // Select reservation
             var indexReservation = -1;
             while (indexReservation < 1 || indexReservation > reservations.Count)
             {
@@ -65,6 +67,7 @@ namespace Cosmos_DB.UseCase
             DeleteReservationItemAsync(selectedReservation).GetAwaiter().GetResult();
         }
         
+        //Function who delete the reservation
         private async Task DeleteReservationItemAsync(Reservation reservation)
         {
             await this.reservationContainer.DeleteItemAsync<Reservation>(reservation.id, new PartitionKey(reservation.type));
