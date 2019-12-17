@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Net;
-using System.Threading;
 using Cosmos_DB.Help;
 using Cosmos_DB.Object;
 using Cosmos_DB.UseCase;
@@ -76,7 +75,7 @@ namespace Cosmos_DB
             this.cosmosClient = new CosmosClient(ENDPOINT_URI, PRIMARY_KEY);
             await this.CreateDatabaseAsync();
             await this.CreateContainerAsync();
-
+            
             encryptService = new EncryptService();
             
             addCustomer = new AddCustomer(customerContainer, encryptService);
@@ -127,7 +126,6 @@ namespace Cosmos_DB
                 }
                 
                 Console.WriteLine();
-                Thread.Sleep(2000);
                 Console.Write("Do want to continue? (y|n) ");
                 input = Console.ReadLine();
                 if (input == null) break;
