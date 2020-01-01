@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Cosmos_DB.Object;
 using Microsoft.Azure.Cosmos;
 using System.Threading.Tasks;
@@ -20,6 +21,10 @@ namespace Cosmos_DB.UseCase
 
         public void Start()
         {
+            Console.WriteLine();
+            Console.WriteLine(">>>> DELETE RESERVATION");
+            Console.WriteLine();
+            
             // Set reservations
             SetReservations().GetAwaiter().GetResult();
             
@@ -62,7 +67,8 @@ namespace Cosmos_DB.UseCase
                     Console.WriteLine("Customer ID: " + reservation.customer_id);
                     Console.WriteLine("Apartment ID: " + reservation.apartment_id);
                     Console.WriteLine("Booking Date: " + reservation.booking_date);
-                    Console.WriteLine(reservation.type.Equals("Booking") ? "Booked" : "Reserved" + " in the period from " + reservation.from + " to " + reservation.to);
+                    Console.WriteLine((reservation.type.Equals("Booking") ? "Booked" : "Reserved") + " in the period " +
+                                      "from " + reservation.from + " to " + reservation.to);
                     Console.WriteLine("------------------------");
                     Console.WriteLine();
 
@@ -74,8 +80,18 @@ namespace Cosmos_DB.UseCase
         
         private async Task Delete(Reservation reservation)
         {
-            await this.reservationContainer.DeleteItemAsync<Reservation>(reservation.id, new PartitionKey(reservation.type));
-            Console.WriteLine("Reservation [{0},{1}] successfully deleted\n", reservation.id, reservation.type);
+            try
+            {
+                // Check if reservation exists
+                var reservationResponse = await this.reservationContainer.ReadItemAsync<Reservation>(reservation.id, new PartitionKey(reservation.type));
+                Console.WriteLine("Reservation {0} does not exist. Deletion canceled.\n", reservationResponse.Resource.id);   
+            }
+            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.Found)
+            {
+                // Reservation exists and will be deleted
+                var reservationResponse = await this.reservationContainer.DeleteItemAsync<Reservation>(reservation.id, new PartitionKey(reservation.type));
+                Console.WriteLine("Reservation {0} successfully deleted.\n", reservationResponse.Resource.id);   
+            }
         }
     }
 }

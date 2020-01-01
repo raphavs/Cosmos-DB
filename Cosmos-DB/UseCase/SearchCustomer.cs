@@ -17,7 +17,7 @@ namespace Cosmos_DB.UseCase
         public void Start()
         {
             Console.WriteLine();
-            Console.WriteLine(">>>>> SEARCH CUSTOMER");
+            Console.WriteLine(">>>> SEARCH CUSTOMER");
             Console.WriteLine();
             
             Console.Write("Please enter the string you are searching for: ");

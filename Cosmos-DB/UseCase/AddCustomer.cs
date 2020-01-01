@@ -32,7 +32,7 @@ namespace Cosmos_DB.UseCase
         public void Start()
         {
             Console.WriteLine();
-            Console.WriteLine(">>> ADD CUSTOMER");
+            Console.WriteLine(">>>> ADD CUSTOMER");
             Console.WriteLine();
             
             // Collect all countries, cities and postcodes to make them selectable for the user
