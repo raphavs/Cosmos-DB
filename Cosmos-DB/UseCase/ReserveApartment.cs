@@ -92,16 +92,16 @@ using Microsoft.Azure.Cosmos.Linq;
             {
                 // Enter period of time
                 Console.WriteLine("Please enter your desired period of time.");
-                var fromDate = new DateTime();
+                var ofDate = new DateTime();
                 var toDate = new DateTime();
                 var periodOfTimeIsValid = false;
                 while (!periodOfTimeIsValid)
                 {
-                    fromDate = SetPeriodOfTime("arrive");
+                    ofDate = SetPeriodOfTime("arrive");
                     toDate = SetPeriodOfTime("depart");
                     Console.WriteLine();
 
-                    if (toDate > fromDate)
+                    if (toDate > ofDate)
                     {
                         periodOfTimeIsValid = true;
                     }
@@ -112,12 +112,14 @@ using Microsoft.Azure.Cosmos.Linq;
                 }
                 
                 // Check if apartment is available
-                var sqlQueryTextCustom = "SELECT * FROM c WHERE c.apartment_id = '" + selectedApartment.id + "' AND " +
-                                         "'" + toDate + "' > c.from AND '" + fromDate + "' < c.to";
+                var ofDateStr = ofDate.ToString("yyyy-MM-ddTHH:mm:ss");
+                var toDateStr = toDate.ToString("yyyy-MM-ddTHH:mm:ss");
+                var sqlQueryTextCustom = "SELECT * FROM c WHERE c.apartment_id = '2' AND c.of < '" + toDateStr + "' " +
+                                         "AND c.to > '" + ofDateStr + "'";
                 var queryDefinition = new QueryDefinition(sqlQueryTextCustom);
                 var queryResultIterator = this.reservationContainer.GetItemQueryIterator<Reservation>(queryDefinition);
 
-                if (queryResultIterator.IsNull())
+                if (ApartmentIsAvailable(queryResultIterator).GetAwaiter().GetResult())
                 {
                     // Apartment available
                     apartmentIsAvailable = true;
@@ -136,7 +138,7 @@ using Microsoft.Azure.Cosmos.Linq;
                         customer_id = selectedCustomer.id,
                         apartment_id = selectedApartment.id,
                         booking_date = DateTime.Now,
-                        from = fromDate,
+                        of = ofDate,
                         to = toDate,
                         type = type
                     };
@@ -173,7 +175,7 @@ using Microsoft.Azure.Cosmos.Linq;
             Customer selectedCustomer)
         {
             var sha256 = SHA256.Create();
-            var valueToHash = string.Concat(selectedCustomer.id, selectedApartment.id, reservation.from, reservation.to);
+            var valueToHash = string.Concat(selectedCustomer.id, selectedApartment.id, reservation.of, reservation.to);
             var id = "";
             
             try
@@ -202,11 +204,11 @@ using Microsoft.Azure.Cosmos.Linq;
         private static DateTime SetPeriodOfTime(string text)
         {
             var date = new DateTime();
-            var dateFormats = new[] {"dd/MM/yyyy"};
+            var dateFormats = new[] {"dd-MM-yyyy"};
             var dateIsValid = false;
             while (!dateIsValid)
             {
-                Console.Write("Please enter the day on which you would like to " + text + " (dd/MM/yyyy): ");
+                Console.Write("Please enter the day on which you would like to " + text + " (dd-MM-yyyy): ");
                 var input = Console.ReadLine();
                 dateIsValid = DateTime.TryParseExact(
                     input,
@@ -219,6 +221,16 @@ using Microsoft.Azure.Cosmos.Linq;
                 {
                     Console.WriteLine("DATE invalid!");
                 }
+            }
+
+            if (text.Equals("arrive"))
+            {
+                date = date.AddHours(15);
+            }
+            
+            if (text.Equals("depart"))
+            {
+                date = date.AddHours(12);
             }
 
             return date;
@@ -262,17 +274,6 @@ using Microsoft.Azure.Cosmos.Linq;
                     Console.WriteLine("City: " + apartment.city);
                     Console.WriteLine("Description: " + apartment.description);
                     Console.WriteLine("Size: " + apartment.qm + " qm");
-                    Console.Write("Additional equipment: ");
-                    Console.WriteLine(apartment.additional_equipment);
-                    for (var i = 0; i < apartment.additional_equipment.Length; i++)
-                    {
-                        Console.Write(apartment.additional_equipment[i]);
-
-                        if (i < apartment.additional_equipment.Length - 1)
-                        {
-                            Console.Write(", ");
-                        }
-                    }
                     Console.WriteLine("Price: " + apartment.price + " $");
                     Console.WriteLine();
                     
@@ -280,6 +281,13 @@ using Microsoft.Azure.Cosmos.Linq;
                     apartments.Add(apartment);
                 }
             }
+        }
+
+        private async Task<bool> ApartmentIsAvailable(FeedIterator<Reservation> queryResultIterator)
+        {
+            if (!queryResultIterator.HasMoreResults) return true;
+            var resultSet = await queryResultIterator.ReadNextAsync();
+            return resultSet.Count <= 0;
         }
     }
 }

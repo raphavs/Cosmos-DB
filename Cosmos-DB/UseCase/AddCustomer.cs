@@ -85,11 +85,11 @@ namespace Cosmos_DB.UseCase
             Console.WriteLine();
             
             var dateOfBirth = new DateTime();
-            var dateFormats = new[] {"dd/MM/yyyy"};
+            var dateFormats = new[] {"dd-MM-yyyy"};
             var dateIsValid = false;
             while (!dateIsValid)
             {
-                Console.Write("Please enter your BIRTHDAY (dd/MM/yyyy): ");
+                Console.Write("Please enter your BIRTHDAY (dd-MM-yyyy): ");
                 var input = Console.ReadLine();
                 dateIsValid = DateTime.TryParseExact(
                     input,
