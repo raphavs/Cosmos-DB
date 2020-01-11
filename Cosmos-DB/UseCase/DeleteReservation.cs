@@ -63,11 +63,11 @@ namespace Cosmos_DB.UseCase
                     index++;
                     Console.WriteLine("-----------------------");
                     Console.WriteLine(index + ". Reservation");
-                    Console.WriteLine("Customer ID: " + reservation.customer_id);
-                    Console.WriteLine("Apartment ID: " + reservation.apartment_id);
-                    Console.WriteLine("Booking Date: " + reservation.booking_date);
-                    Console.WriteLine((reservation.type.Equals("booking") ? "Booked" : "Reserved") + " in the period " +
-                                      "from " + reservation.of + " to " + reservation.to);
+                    Console.WriteLine("Customer ID: " + reservation.CustomerId);
+                    Console.WriteLine("Apartment ID: " + reservation.ApartmentId);
+                    Console.WriteLine("Booking Date: " + reservation.BookingDate);
+                    Console.WriteLine((reservation.Type.Equals("booking") ? "Booked" : "Reserved") + " in the period " +
+                                      "from " + reservation.Of + " to " + reservation.To);
                     Console.WriteLine("------------------------");
                     Console.WriteLine();
 
@@ -79,7 +79,7 @@ namespace Cosmos_DB.UseCase
         
         private async Task Delete(Reservation reservation)
         {
-            await this.reservationContainer.DeleteItemAsync<Reservation>(reservation.id, new PartitionKey(reservation.type));
+            await this.reservationContainer.DeleteItemAsync<Reservation>(reservation.Id, new PartitionKey(reservation.Type));
             Console.WriteLine("Reservation successfully deleted.");
         }
     }

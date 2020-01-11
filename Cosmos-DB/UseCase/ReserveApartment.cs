@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Cosmos_DB.Help;
 using Cosmos_DB.Object;
 using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Linq;
 
  namespace Cosmos_DB.UseCase
 {
@@ -61,7 +60,7 @@ using Microsoft.Azure.Cosmos.Linq;
                 }
             }
             var selectedCustomer = customers.ElementAt(indexCustomer - 1);
-            Console.WriteLine("You have chosen: " + selectedCustomer.firstname + " " + selectedCustomer.lastname);
+            Console.WriteLine("You have chosen: " + selectedCustomer.Firstname + " " + selectedCustomer.Lastname);
             Console.WriteLine();
             
             // Collect all apartments
@@ -82,8 +81,8 @@ using Microsoft.Azure.Cosmos.Linq;
                 }
             }
             var selectedApartment = apartments.ElementAt(indexApartment - 1);
-            Console.WriteLine("You have chosen apartment: " + indexApartment + " in " + selectedApartment.city + ", " + 
-                              selectedApartment.country);
+            Console.WriteLine("You have chosen apartment: " + indexApartment + " in " + selectedApartment.City + ", " + 
+                              selectedApartment.Country);
             Console.WriteLine();
             
             // Making the reservation
@@ -135,12 +134,12 @@ using Microsoft.Azure.Cosmos.Linq;
 
                     var reservation = new Reservation
                     {
-                        customer_id = selectedCustomer.id,
-                        apartment_id = selectedApartment.id,
-                        booking_date = DateTime.Now,
-                        of = ofDate,
-                        to = toDate,
-                        type = type
+                        CustomerId = selectedCustomer.Id,
+                        ApartmentId = selectedApartment.Id,
+                        BookingDate = DateTime.Now,
+                        Of = ofDate,
+                        To = toDate,
+                        Type = type
                     };
                     
                     // Add reservation to database
@@ -175,7 +174,7 @@ using Microsoft.Azure.Cosmos.Linq;
             Customer selectedCustomer)
         {
             var sha256 = SHA256.Create();
-            var valueToHash = string.Concat(selectedCustomer.id, selectedApartment.id, reservation.of, reservation.to);
+            var valueToHash = string.Concat(selectedCustomer.Id, selectedApartment.Id, reservation.Of, reservation.To);
             var id = "";
             
             try
@@ -185,19 +184,19 @@ using Microsoft.Azure.Cosmos.Linq;
                     id = encryptService.GenerateHash(sha256, valueToHash);
 
                     // Check if the ID is already assigned
-                    var reservationResponse = await this.reservationContainer.ReadItemAsync<Reservation>(id, new PartitionKey(reservation.type));
-                    Console.WriteLine("Reservation in database with id: {0} already exists\n", reservationResponse.Resource.id);
+                    var reservationResponse = await this.reservationContainer.ReadItemAsync<Reservation>(id, new PartitionKey(reservation.Type));
+                    Console.WriteLine("Reservation in database with id: {0} already exists\n", reservationResponse.Resource.Id);
 
                     valueToHash = id;
                 }
             }
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {
-                reservation.id = id;
+                reservation.Id = id;
                 
                 // Create the reservation
-                var reservationResponse = await this.reservationContainer.CreateItemAsync<Reservation>(reservation, new PartitionKey(reservation.type));
-                Console.WriteLine("Created reservation in database with id: {0}\n", reservationResponse.Resource.id);
+                var reservationResponse = await this.reservationContainer.CreateItemAsync<Reservation>(reservation, new PartitionKey(reservation.Type));
+                Console.WriteLine("Created reservation in database with id: {0}\n", reservationResponse.Resource.Id);
             }
         }
 
@@ -248,7 +247,7 @@ using Microsoft.Azure.Cosmos.Linq;
                 foreach (var customer in currentResultSet)
                 {
                     index++;
-                    Console.WriteLine(index + ". " + customer.firstname + " " + customer.lastname);
+                    Console.WriteLine(index + ". " + customer.Firstname + " " + customer.Lastname);
                     Console.WriteLine();
 
                     // Add customer to list
@@ -270,11 +269,11 @@ using Microsoft.Azure.Cosmos.Linq;
                 {
                     index++;
                     Console.WriteLine(index + ". Apartment:");
-                    Console.WriteLine("Country: " + apartment.country);
-                    Console.WriteLine("City: " + apartment.city);
-                    Console.WriteLine("Description: " + apartment.description);
-                    Console.WriteLine("Size: " + apartment.qm + " qm");
-                    Console.WriteLine("Price: " + apartment.price + " $");
+                    Console.WriteLine("Country: " + apartment.Country);
+                    Console.WriteLine("City: " + apartment.City);
+                    Console.WriteLine("Description: " + apartment.Description);
+                    Console.WriteLine("Size: " + apartment.SquareMeters + " sqm");
+                    Console.WriteLine("Price: " + apartment.Price + " $");
                     Console.WriteLine();
                     
                     // Add apartment to list

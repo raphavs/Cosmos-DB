@@ -48,7 +48,7 @@ namespace Cosmos_DB.UseCase
         private async Task CreateCustomer(Customer customer)
         {
             var sha256 = SHA256.Create();
-            var valueToHash = string.Concat(customer.firstname, customer.lastname, customer.email);
+            var valueToHash = string.Concat(customer.Firstname, customer.Lastname, customer.Email);
             var id = "";
             
             try
@@ -58,19 +58,19 @@ namespace Cosmos_DB.UseCase
                     id = encryptService.GenerateHash(sha256, valueToHash);
 
                     // Check if the ID is already assigned
-                    var customerResponse = await this.customerContainer.ReadItemAsync<Customer>(id, new PartitionKey(customer.country));
-                    Console.WriteLine("Customer in database with id: {0} already exists\n", customerResponse.Resource.id);
+                    var customerResponse = await this.customerContainer.ReadItemAsync<Customer>(id, new PartitionKey(customer.Country));
+                    Console.WriteLine("Customer in database with id: {0} already exists\n", customerResponse.Resource.Id);
 
                     valueToHash = id;
                 }
             }
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {
-                customer.id = id;
+                customer.Id = id;
                 
                 // Create the customer
-                var customerResponse = await this.customerContainer.CreateItemAsync<Customer>(customer, new PartitionKey(customer.country));
-                Console.WriteLine("Created customer in database with id: {0}\n", customerResponse.Resource.id);
+                var customerResponse = await this.customerContainer.CreateItemAsync<Customer>(customer, new PartitionKey(customer.Country));
+                Console.WriteLine("Customer successfully created with id: {0}\n", customerResponse.Resource.Id);
             }
         }
 
@@ -149,7 +149,7 @@ namespace Cosmos_DB.UseCase
                 foreach (var country in countries)
                 {
                     Console.Write(countries.IndexOf(country) + 1 + ". ");
-                    Console.WriteLine(country.name);
+                    Console.WriteLine(country.Name);
                 }
                 Console.Write("Please enter the corresponding number: ");
                 
@@ -163,11 +163,11 @@ namespace Cosmos_DB.UseCase
                 }
             }
             var selectedCountry = countries.ElementAt(indexCountry - 1);
-            Console.WriteLine("You have chosen: " + selectedCountry.name);
+            Console.WriteLine("You have chosen: " + selectedCountry.Name);
             Console.WriteLine();
 
             // Selection of city
-            var cities = selectedCountry.cities;
+            var cities = selectedCountry.Cities;
             var indexCity = -1;
             while (indexCity < 1 || indexCity > cities.Count)
             {
@@ -175,7 +175,7 @@ namespace Cosmos_DB.UseCase
                 foreach (var city in cities)
                 {
                     Console.Write(cities.IndexOf(city) + 1 + ". ");
-                    Console.WriteLine(city.name);
+                    Console.WriteLine(city.Name);
                 }
                 Console.Write("Please enter the corresponding number: ");
 
@@ -189,11 +189,11 @@ namespace Cosmos_DB.UseCase
                 }
             }
             var selectedCity = cities.ElementAt(indexCity - 1);
-            Console.WriteLine("You have chosen: " + selectedCity.name);
+            Console.WriteLine("You have chosen: " + selectedCity.Name);
             Console.WriteLine();
             
             // Selection of postcode
-            var postcodes = selectedCity.postcodes;
+            var postcodes = selectedCity.Postcodes;
             var indexPostcode = -1;
             while (indexPostcode < 1 || indexPostcode > postcodes.Count)
             {
@@ -232,17 +232,17 @@ namespace Cosmos_DB.UseCase
             
             return new Customer
             {
-                firstname = firstname,
-                lastname = lastname,
-                date_of_birth = dateOfBirth,
-                email = email,
-                phone = phone,
-                street = street,
-                city = selectedCity.name,
-                postcode = selectedPostcode,
-                country = selectedCountry.name,
-                bank_code = bankCode,
-                bank_account_number = bankAccountNumber
+                Firstname = firstname,
+                Lastname = lastname,
+                DateOfBirth = dateOfBirth,
+                Email = email,
+                Phone = phone,
+                Street = street,
+                City = selectedCity.Name,
+                Postcode = selectedPostcode,
+                Country = selectedCountry.Name,
+                BankCode = bankCode,
+                BankAccountNumber = bankAccountNumber
             };
         }
 
@@ -257,19 +257,19 @@ namespace Cosmos_DB.UseCase
                 var currentResultSet = await queryResultSetIterator.ReadNextAsync();
                 foreach (var customer in currentResultSet)
                 {
-                    var country = customer.country;
-                    var city = customer.city;
-                    var postcode = customer.postcode;
+                    var country = customer.Country;
+                    var city = customer.City;
+                    var postcode = customer.Postcode;
                     
                     // Check if country already exists
-                    var tempCountry = countries.Find(a => a.name.Equals(country));
+                    var tempCountry = countries.Find(a => a.Name.Equals(country));
 
                     if (tempCountry == null)
                     {
                         tempCountry = new Country
                         {
-                            name = country,
-                            cities = new List<City>()
+                            Name = country,
+                            Cities = new List<City>()
                         };
 
                         // Add country
@@ -277,25 +277,25 @@ namespace Cosmos_DB.UseCase
                     }
 
                     // Check if city already exists in country
-                    var tempCity = tempCountry.cities.Find(c => c.name.Equals(city));
+                    var tempCity = tempCountry.Cities.Find(c => c.Name.Equals(city));
 
                     if (tempCity == null)
                     {
                         tempCity = new City
                         {
-                            name = city,
-                            postcodes = new List<string>()
+                            Name = city,
+                            Postcodes = new List<string>()
                         };
 
                         // Add city to country
-                        tempCountry.cities.Add(tempCity);
+                        tempCountry.Cities.Add(tempCity);
                     }
                     
                     // Check if postcode already exists in city
-                    if (!tempCity.postcodes.Contains(postcode))
+                    if (!tempCity.Postcodes.Contains(postcode))
                     {
                         // Add postcode to city
-                        tempCity.postcodes.Add(postcode);
+                        tempCity.Postcodes.Add(postcode);
                     }
                 }
             }

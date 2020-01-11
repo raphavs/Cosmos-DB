@@ -5,16 +5,36 @@ namespace Cosmos_DB.Object
     public class Apartment
     {
         [JsonProperty(PropertyName = "id")]
-        public string id { get; set; }
-        public string plz { get; set; }
-        public string street { get; set; }
-        public string city { get; set; }
-        public string country { get; set; }
-        public string apartment_number { get; set; }
-        public int qm { get; set; }
-        public double price { get; set; }
-        public string description { get; set; }
-        public string [] additional_equipment { get; set; }
-        public string [] pictures { get; set; }
+        public string Id { get; set; }
+        
+        [JsonProperty(PropertyName = "postcode")]
+        public string Postcode { get; set; }
+        
+        [JsonProperty(PropertyName = "street")]
+        public string Street { get; set; }
+        
+        [JsonProperty(PropertyName = "city")]
+        public string City { get; set; }
+        
+        [JsonProperty(PropertyName = "country")]
+        public string Country { get; set; }
+        
+        [JsonProperty(PropertyName = "apartment_number")]
+        public string ApartmentNumber { get; set; }
+        
+        [JsonProperty(PropertyName = "sqm")]
+        public int SquareMeters { get; set; }
+        
+        [JsonProperty(PropertyName = "price")]
+        public double Price { get; set; }
+        
+        [JsonProperty(PropertyName = "description")]
+        public string Description { get; set; }
+        
+        [JsonProperty(PropertyName = "additional_equipment")]
+        public string [] AdditionalEquipment { get; set; }
+        
+        [JsonProperty(PropertyName = "pictures")]
+        public string [] Pictures { get; set; }
     }
 }
