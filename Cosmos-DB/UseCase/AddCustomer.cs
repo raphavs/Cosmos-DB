@@ -59,7 +59,7 @@ namespace Cosmos_DB.UseCase
 
                     // Check if the ID is already assigned
                     var customerResponse = await this.customerContainer.ReadItemAsync<Customer>(id, new PartitionKey(customer.Country));
-                    Console.WriteLine("Customer in database with id: {0} already exists\n", customerResponse.Resource.Id);
+                    Console.WriteLine("Customer with id: {0} already exists\n", customerResponse.Resource.Id);
 
                     valueToHash = id;
                 }

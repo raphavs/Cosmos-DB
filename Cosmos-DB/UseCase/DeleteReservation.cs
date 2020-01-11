@@ -80,7 +80,7 @@ namespace Cosmos_DB.UseCase
         private async Task Delete(Reservation reservation)
         {
             await this.reservationContainer.DeleteItemAsync<Reservation>(reservation.Id, new PartitionKey(reservation.Type));
-            Console.WriteLine("Reservation successfully deleted.");
+            Console.WriteLine("Reservation deleted successfully.");
         }
     }
 }

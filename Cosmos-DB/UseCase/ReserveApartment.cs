@@ -145,7 +145,7 @@ using Microsoft.Azure.Cosmos;
                     // Add reservation to database
                     CreateReservation(reservation, selectedApartment, selectedCustomer).GetAwaiter().GetResult();
                 
-                    Console.WriteLine("You have successfully " + input == "r" ? "reserved" : "booked" + " the apartment!");
+                    Console.WriteLine("You have " + input == "r" ? "reserved" : "booked" + " the apartment successfully!");
                     Console.WriteLine();
                 }
                 else
@@ -185,7 +185,7 @@ using Microsoft.Azure.Cosmos;
 
                     // Check if the ID is already assigned
                     var reservationResponse = await this.reservationContainer.ReadItemAsync<Reservation>(id, new PartitionKey(reservation.Type));
-                    Console.WriteLine("Reservation in database with id: {0} already exists\n", reservationResponse.Resource.Id);
+                    Console.WriteLine("Reservation with id: {0} already exists\n", reservationResponse.Resource.Id);
 
                     valueToHash = id;
                 }
@@ -196,7 +196,7 @@ using Microsoft.Azure.Cosmos;
                 
                 // Create the reservation
                 var reservationResponse = await this.reservationContainer.CreateItemAsync<Reservation>(reservation, new PartitionKey(reservation.Type));
-                Console.WriteLine("Created reservation in database with id: {0}\n", reservationResponse.Resource.Id);
+                Console.WriteLine("Reservation successfully created with id: {0}\n", reservationResponse.Resource.Id);
             }
         }
 
