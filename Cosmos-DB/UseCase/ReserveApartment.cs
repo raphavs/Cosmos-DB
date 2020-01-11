@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using Cosmos_DB.Help;
 using Cosmos_DB.Object;
 using Microsoft.Azure.Cosmos;
-
- namespace Cosmos_DB.UseCase
+ 
+namespace Cosmos_DB.UseCase
 {
     public class ReserveApartment
     {
