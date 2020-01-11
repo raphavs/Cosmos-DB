@@ -6,16 +6,36 @@ namespace Cosmos_DB.Object
     public class Reservation
     {
         [JsonProperty(PropertyName = "id")]
-        public string id { get; set; }
-        public string customer_id { get; set; }
-        public string apartment_id { get; set; }
-        public DateTime booking_date { get; set; }
-        public string invoice_number { get; set; }
-        public DateTime? receipt_of_payment { get; set; }
-        public DateTime from { get; set; }
-        public DateTime to { get; set; }
-        public string type { get; set; }
-        public DateTime? invoice_date { get; set; }
-        public double? invoice_amount { get; set; }
+        public string Id { get; set; }
+        
+        [JsonProperty(PropertyName = "customer_id")]
+        public string CustomerId { get; set; }
+        
+        [JsonProperty(PropertyName = "apartment_id")]
+        public string ApartmentId { get; set; }
+        
+        [JsonProperty(PropertyName = "booking_date")]
+        public DateTime BookingDate { get; set; }
+        
+        [JsonProperty(PropertyName = "invoice_number")]
+        public string InvoiceNumber { get; set; }
+        
+        [JsonProperty(PropertyName = "receipt_of_payment")]
+        public DateTime? ReceiptOfPayment { get; set; }
+        
+        [JsonProperty(PropertyName = "of")]
+        public DateTime Of { get; set; }
+        
+        [JsonProperty(PropertyName = "to")]
+        public DateTime To { get; set; }
+        
+        [JsonProperty(PropertyName = "type")]
+        public string Type { get; set; }
+        
+        [JsonProperty(PropertyName = "invoice_date")]
+        public DateTime? InvoiceDate { get; set; }
+        
+        [JsonProperty(PropertyName = "invoice_amount")]
+        public double? InvoiceAmount { get; set; }
     }
 }

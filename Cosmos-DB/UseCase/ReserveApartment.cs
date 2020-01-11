@@ -9,7 +9,7 @@ using Cosmos_DB.Help;
 using Cosmos_DB.Object;
 using Microsoft.Azure.Cosmos;
 
-namespace Cosmos_DB.UseCase
+ namespace Cosmos_DB.UseCase
 {
     public class ReserveApartment
     {
@@ -19,7 +19,6 @@ namespace Cosmos_DB.UseCase
         private readonly EncryptService encryptService;
         private readonly List<Customer> customers;
         private readonly List<Apartment> apartments;
-        private readonly List<Reservation> reservations;
 
         public ReserveApartment(
             Container customerContainer, 
@@ -33,20 +32,18 @@ namespace Cosmos_DB.UseCase
             this.encryptService = encryptService;
             this.customers = new List<Customer>();
             this.apartments = new List<Apartment>();
-            this.reservations = new List<Reservation>();
         }
         
         public void Start()
         {
             Console.WriteLine();
-            Console.WriteLine(">>> RESERVE APARTMENT");
+            Console.WriteLine(">>>> RESERVE APARTMENT");
             Console.WriteLine();
             
             const string sqlQueryText = "SELECT * FROM c";
-            var queryDefinition = new QueryDefinition(sqlQueryText);
 
             // Collect all customers
-            SetCustomers(queryDefinition).GetAwaiter().GetResult();
+            SetCustomers(sqlQueryText).GetAwaiter().GetResult();
 
             // Select customer
             var indexCustomer = -1;
@@ -63,11 +60,11 @@ namespace Cosmos_DB.UseCase
                 }
             }
             var selectedCustomer = customers.ElementAt(indexCustomer - 1);
-            Console.WriteLine("You have chosen: " + selectedCustomer.firstname + " " + selectedCustomer.lastname);
+            Console.WriteLine("You have chosen: " + selectedCustomer.Firstname + " " + selectedCustomer.Lastname);
             Console.WriteLine();
             
             // Collect all apartments
-            SetApartments(queryDefinition).GetAwaiter().GetResult();
+            SetApartments(sqlQueryText).GetAwaiter().GetResult();
 
             // Select apartment
             var indexApartment = -1;
@@ -84,26 +81,26 @@ namespace Cosmos_DB.UseCase
                 }
             }
             var selectedApartment = apartments.ElementAt(indexApartment - 1);
-            Console.WriteLine("You have chosen apartment: " + indexApartment + " in " + selectedApartment.city + ", " + 
-                              selectedApartment.country);
+            Console.WriteLine("You have chosen apartment: " + indexApartment + " in " + selectedApartment.City + ", " + 
+                              selectedApartment.Country);
             Console.WriteLine();
-
-            // Enter period of time
-            // Check if apartment is available
+            
+            // Making the reservation
             var apartmentIsAvailable = false;
             while (!apartmentIsAvailable)
             {
+                // Enter period of time
                 Console.WriteLine("Please enter your desired period of time.");
-                var fromDate = new DateTime();
+                var ofDate = new DateTime();
                 var toDate = new DateTime();
                 var periodOfTimeIsValid = false;
                 while (!periodOfTimeIsValid)
                 {
-                    fromDate = SetPeriodOfTime("arrive");
+                    ofDate = SetPeriodOfTime("arrive");
                     toDate = SetPeriodOfTime("depart");
                     Console.WriteLine();
 
-                    if (toDate > fromDate)
+                    if (toDate > ofDate)
                     {
                         periodOfTimeIsValid = true;
                     }
@@ -114,27 +111,49 @@ namespace Cosmos_DB.UseCase
                 }
                 
                 // Check if apartment is available
-                var sqlQueryTextCustom = "SELECT * FROM c WHERE c.apartment_id = '" + selectedApartment.id + "'";
-                queryDefinition = new QueryDefinition(sqlQueryTextCustom);
-                
-                // Collect all reservations of corresponding apartment
-                SetReservations(queryDefinition).GetAwaiter().GetResult();
+                var ofDateStr = ofDate.ToString("yyyy-MM-ddTHH:mm:ss");
+                var toDateStr = toDate.ToString("yyyy-MM-ddTHH:mm:ss");
+                var sqlQueryTextCustom = "SELECT * FROM c WHERE c.apartment_id = '2' AND c.of < '" + toDateStr + "' " +
+                                         "AND c.to > '" + ofDateStr + "'";
+                var queryDefinition = new QueryDefinition(sqlQueryTextCustom);
+                var queryResultIterator = this.reservationContainer.GetItemQueryIterator<Reservation>(queryDefinition);
 
-                apartmentIsAvailable = true;
-                foreach (var reservation in reservations)
+                if (ApartmentIsAvailable(queryResultIterator).GetAwaiter().GetResult())
                 {
-                    if (toDate > reservation.from && fromDate < reservation.to)
+                    // Apartment available
+                    apartmentIsAvailable = true;
+                    
+                    // Indicate if customer want to book or reserve the apartment
+                    var type = "";
+                    Console.Write(
+                        "The apartment is available. Would you like to book it directly or just make a reservation?\n" +
+                        "Press any key to book and r to reserve the apartment: ");
+                    var input = Console.ReadLine();
+                    Console.WriteLine();
+                    type = input == "r" ? "reservation" : "booking";
+
+                    var reservation = new Reservation
                     {
-                        apartmentIsAvailable = false;
-                        Console.WriteLine("Apartment is not available!");
-                        Console.WriteLine();
-                        break;
-                    }
-                }
+                        CustomerId = selectedCustomer.Id,
+                        ApartmentId = selectedApartment.Id,
+                        BookingDate = DateTime.Now,
+                        Of = ofDate,
+                        To = toDate,
+                        Type = type
+                    };
+                    
+                    // Add reservation to database
+                    CreateReservation(reservation, selectedApartment, selectedCustomer).GetAwaiter().GetResult();
                 
-                if (!apartmentIsAvailable)
+                    Console.WriteLine("You have " + input == "r" ? "reserved" : "booked" + " the apartment successfully!");
+                    Console.WriteLine();
+                }
+                else
                 {
                     // Apartment not available
+                    Console.WriteLine("Apartment is not available!");
+                    Console.WriteLine();
+                    
                     // Specify another period of time or cancel process
                     Console.Write("Would you like to specify a different period of time or cancel the process?\n" +
                                   "Press any key to enter another time of period and x to cancel the process: ");
@@ -146,35 +165,6 @@ namespace Cosmos_DB.UseCase
                     Console.WriteLine();
                     break;
                 }
-                else
-                {
-                    // Apartment available
-                    // Indicate if you want to book or reserve the apartment
-                    var type = "";
-                    Console.Write(
-                        "The apartment is available. Would you like to book it directly or just make a reservation?\n" +
-                        "Press any key to book and r to reserve the apartment: ");
-                    var input = Console.ReadLine();
-                    Console.WriteLine();
-
-                    type = input == "r" ? "reservation" : "booking";
-
-                    var reservation = new Reservation
-                    {
-                        customer_id = selectedCustomer.id,
-                        apartment_id = selectedApartment.id,
-                        booking_date = DateTime.Now,
-                        from = fromDate,
-                        to = toDate,
-                        type = type
-                    };
-                    
-                    // Add reservation to database
-                    CreateReservation(reservation, selectedApartment, selectedCustomer).GetAwaiter().GetResult();
-                
-                    Console.WriteLine("You have successfully " + input == "r" ? "reserved" : "booked" + " the apartment!");
-                    Console.WriteLine();
-                }
             }
         }
 
@@ -184,7 +174,7 @@ namespace Cosmos_DB.UseCase
             Customer selectedCustomer)
         {
             var sha256 = SHA256.Create();
-            var valueToHash = string.Concat(selectedCustomer.id, selectedApartment.id, reservation.from, reservation.to);
+            var valueToHash = string.Concat(selectedCustomer.Id, selectedApartment.Id, reservation.Of, reservation.To);
             var id = "";
             
             try
@@ -194,30 +184,30 @@ namespace Cosmos_DB.UseCase
                     id = encryptService.GenerateHash(sha256, valueToHash);
 
                     // Check if the ID is already assigned
-                    var reservationResponse = await this.reservationContainer.ReadItemAsync<Reservation>(id, new PartitionKey(reservation.type));
-                    Console.WriteLine("Reservation in database with id: {0} already exists\n", reservationResponse.Resource.id);
+                    var reservationResponse = await this.reservationContainer.ReadItemAsync<Reservation>(id, new PartitionKey(reservation.Type));
+                    Console.WriteLine("Reservation with id: {0} already exists\n", reservationResponse.Resource.Id);
 
                     valueToHash = id;
                 }
             }
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {
-                reservation.id = id;
+                reservation.Id = id;
                 
                 // Create the reservation
-                var reservationResponse = await this.reservationContainer.CreateItemAsync<Reservation>(reservation, new PartitionKey(reservation.type));
-                Console.WriteLine("Created reservation in database with id: {0}\n", reservationResponse.Resource.id);
+                var reservationResponse = await this.reservationContainer.CreateItemAsync<Reservation>(reservation, new PartitionKey(reservation.Type));
+                Console.WriteLine("Reservation successfully created with id: {0}\n", reservationResponse.Resource.Id);
             }
         }
 
         private static DateTime SetPeriodOfTime(string text)
         {
             var date = new DateTime();
-            var dateFormats = new[] {"dd/MM/yyyy"};
+            var dateFormats = new[] {"dd-MM-yyyy"};
             var dateIsValid = false;
             while (!dateIsValid)
             {
-                Console.Write("Please enter the day on which you would like to " + text + " (dd/MM/yyyy): ");
+                Console.Write("Please enter the day on which you would like to " + text + " (dd-MM-yyyy): ");
                 var input = Console.ReadLine();
                 dateIsValid = DateTime.TryParseExact(
                     input,
@@ -232,11 +222,22 @@ namespace Cosmos_DB.UseCase
                 }
             }
 
+            if (text.Equals("arrive"))
+            {
+                date = date.AddHours(15);
+            }
+            
+            if (text.Equals("depart"))
+            {
+                date = date.AddHours(12);
+            }
+
             return date;
         }
 
-        private async Task SetCustomers(QueryDefinition queryDefinition)
+        private async Task SetCustomers(string sqlQueryText)
         {
+            var queryDefinition = new QueryDefinition(sqlQueryText);
             var queryResultIterator = this.customerContainer.GetItemQueryIterator<Customer>(queryDefinition);
             while (queryResultIterator.HasMoreResults)
             {
@@ -246,7 +247,7 @@ namespace Cosmos_DB.UseCase
                 foreach (var customer in currentResultSet)
                 {
                     index++;
-                    Console.WriteLine(index + ". " + customer.firstname + " " + customer.lastname);
+                    Console.WriteLine(index + ". " + customer.Firstname + " " + customer.Lastname);
                     Console.WriteLine();
 
                     // Add customer to list
@@ -255,8 +256,9 @@ namespace Cosmos_DB.UseCase
             }
         }
         
-        private async Task SetApartments(QueryDefinition queryDefinition)
+        private async Task SetApartments(string sqlQueryText)
         {
+            var queryDefinition = new QueryDefinition(sqlQueryText);
             var queryResultIterator = this.apartmentContainer.GetItemQueryIterator<Apartment>(queryDefinition);
             while (queryResultIterator.HasMoreResults)
             {
@@ -267,24 +269,11 @@ namespace Cosmos_DB.UseCase
                 {
                     index++;
                     Console.WriteLine(index + ". Apartment:");
-                    Console.WriteLine("Country: " + apartment.country);
-                    Console.WriteLine("City: " + apartment.city);
-                    Console.WriteLine("Description: " + apartment.description);
-                    Console.WriteLine("Size: " + apartment.qm + " qm");
-                    /*
-                    Console.Write("Additional equipment: ");
-                    Console.WriteLine(apartment.additional_equipment);
-                    for (var i = 0; i < apartment.additional_equipment.Length; i++)
-                    {
-                        Console.Write(apartment.additional_equipment[i]);
-
-                        if (i < apartment.additional_equipment.Length - 1)
-                        {
-                            Console.Write(", ");
-                        }
-                    }
-                    */
-                    Console.WriteLine("Price: " + apartment.price + " $");
+                    Console.WriteLine("Country: " + apartment.Country);
+                    Console.WriteLine("City: " + apartment.City);
+                    Console.WriteLine("Description: " + apartment.Description);
+                    Console.WriteLine("Size: " + apartment.SquareMeters + " sqm");
+                    Console.WriteLine("Price: " + apartment.Price + " $");
                     Console.WriteLine();
                     
                     // Add apartment to list
@@ -292,19 +281,12 @@ namespace Cosmos_DB.UseCase
                 }
             }
         }
-        
-        private async Task SetReservations(QueryDefinition queryDefinition)
+
+        private async Task<bool> ApartmentIsAvailable(FeedIterator<Reservation> queryResultIterator)
         {
-            var queryResultIterator = this.reservationContainer.GetItemQueryIterator<Reservation>(queryDefinition);
-            while (queryResultIterator.HasMoreResults)
-            {
-                var currentResultSet = await queryResultIterator.ReadNextAsync();
-                foreach (var reservation in currentResultSet)
-                {
-                    // Add reservation to list
-                    reservations.Add(reservation);
-                }
-            }
+            if (!queryResultIterator.HasMoreResults) return true;
+            var resultSet = await queryResultIterator.ReadNextAsync();
+            return resultSet.Count <= 0;
         }
     }
 }

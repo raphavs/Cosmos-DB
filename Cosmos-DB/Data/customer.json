@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "id": "1",
     "postcode": "78462",
@@ -10,7 +10,7 @@
     "bank_code": 69271723,
     "email": "knapf@gmx.de",
     "phone": "07531 123456",
-    "date_of_birth": "1960-01-01T00:00:00.365Z",
+    "date_of_birth": "1960-01-01T00:00:00",
     "bank_account_number": 7823212
   },
   {
@@ -24,7 +24,7 @@
     "bank_code": 32793968,
     "email": "meiers.hans@t-online.de",
     "phone": "06221-999888",
-    "date_of_birth": "1975-01-02T00:00:00.365Z",
+    "date_of_birth": "1975-01-02T00:00:00",
     "bank_account_number": 8929368
   },
   {
@@ -38,7 +38,7 @@
     "bank_code": 69271723,
     "email": "huber@t-online.de",
     "phone": "0711-554673",
-    "date_of_birth": "1980-01-03T00:00:00.365Z",
+    "date_of_birth": "1980-01-03T00:00:00",
     "bank_account_number": 1347291
   },
   {
@@ -52,7 +52,7 @@
     "email": "eber@bluewin.ch",
     "phone": "+41-171-9864785",
     "postcode": "3001",
-    "date_of_birth": "1985-01-04T00:00:00.365Z",
+    "date_of_birth": "1985-01-04T00:00:00",
     "bank_account_number": 8792978
   },
   {
@@ -66,7 +66,7 @@
     "email": "meier@gmail. com",
     "phone": "+41-171-9864785",
     "postcode": "8001",
-    "date_of_birth": "1990-01-05T00:00:00.365Z",
+    "date_of_birth": "1990-01-05T00:00:00",
     "bank_account_number": 9082780
   },
   {
@@ -80,7 +80,7 @@
     "bank_code": 69271723,
     "email": "knapf@gmx.de",
     "phone": "0171-9876543",
-    "date_of_birth": "1995-01-06T00:00:00.365Z",
+    "date_of_birth": "1995-01-06T00:00:00",
     "bank_account_number": 7322890
   }
 ]

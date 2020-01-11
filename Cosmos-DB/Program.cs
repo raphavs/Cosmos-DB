@@ -9,10 +9,10 @@ namespace Cosmos_DB
     internal class Program
     {
         // The Azure Cosmos DB endpoint for running this sample.
-        private const string ENDPOINT_URI = "https://dominik.documents.azure.com:443/";
+        private const string ENDPOINT_URI = "https://dbis2.documents.azure.com:443/";
         
         // The primary key for the Azure Cosmos account.
-        private const string PRIMARY_KEY = "2re6gMOGOcTjdDpRle0PpsI5sFGv1WNdiYdr0yHffSGA5voKqcMxyMoSWP9GsPGKczpWYqVlW6dqAvCxxhjBdQ==";
+        private const string PRIMARY_KEY = "y9iYtPxf2adljhu5GaF5gELGazibYhSxIWqITmDScX2pWJ8wCZukITjABQrQ58qw37Vh830TV0dMyeolZ7QggQ==";
 
         // The Cosmos client instance
         private CosmosClient cosmosClient;

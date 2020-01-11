@@ -17,7 +17,7 @@ namespace Cosmos_DB.UseCase
         public void Start()
         {
             Console.WriteLine();
-            Console.WriteLine(">>>>> SEARCH CUSTOMER");
+            Console.WriteLine(">>>> SEARCH CUSTOMER");
             Console.WriteLine();
             
             Console.Write("Please enter the string you are searching for: ");
@@ -44,16 +44,16 @@ namespace Cosmos_DB.UseCase
                 {
                     index++;
                     Console.WriteLine(index + ". Customer");
-                    Console.WriteLine("Name: " + customer.firstname + " " + customer.lastname);
-                    Console.WriteLine("Email: " + customer.email);
-                    Console.WriteLine("Date of Birth: " + customer.date_of_birth);
-                    Console.WriteLine("Phone Number: " + customer.phone);
-                    Console.WriteLine("Street: " + customer.street);
-                    Console.WriteLine("Postcode: " + customer.postcode);
-                    Console.WriteLine("City: " + customer.city);
-                    Console.WriteLine("Country: " + customer.country);
-                    Console.WriteLine("Bank Code: " + customer.bank_code); 
-                    Console.WriteLine("Bank Account Number: " + customer.bank_account_number); 
+                    Console.WriteLine("Name: " + customer.Firstname + " " + customer.Lastname);
+                    Console.WriteLine("Email: " + customer.Email);
+                    Console.WriteLine("Date of Birth: " + customer.DateOfBirth);
+                    Console.WriteLine("Phone Number: " + customer.Phone);
+                    Console.WriteLine("Street: " + customer.Street);
+                    Console.WriteLine("Postcode: " + customer.Postcode);
+                    Console.WriteLine("City: " + customer.City);
+                    Console.WriteLine("Country: " + customer.Country);
+                    Console.WriteLine("Bank Code: " + customer.BankCode); 
+                    Console.WriteLine("Bank Account Number: " + customer.BankAccountNumber); 
                     Console.WriteLine();
                 }
             }
