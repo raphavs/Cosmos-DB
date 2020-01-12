@@ -113,8 +113,8 @@ namespace Cosmos_DB.UseCase
                 // Check if apartment is available
                 var ofDateStr = ofDate.ToString("yyyy-MM-ddTHH:mm:ss");
                 var toDateStr = toDate.ToString("yyyy-MM-ddTHH:mm:ss");
-                var sqlQueryTextCustom = "SELECT * FROM c WHERE c.apartment_id = '2' AND c.of < '" + toDateStr + "' " +
-                                         "AND c.to > '" + ofDateStr + "'";
+                var sqlQueryTextCustom = "SELECT * FROM c WHERE c.apartment_id = '" + selectedApartment.Id + "' " +
+                                         "AND c.of < '" + toDateStr + "' AND c.to > '" + ofDateStr + "'";
                 var queryDefinition = new QueryDefinition(sqlQueryTextCustom);
                 var queryResultIterator = this.reservationContainer.GetItemQueryIterator<Reservation>(queryDefinition);
 
@@ -143,7 +143,7 @@ namespace Cosmos_DB.UseCase
                     };
                     
                     // Add reservation to database
-                    CreateReservation(reservation, selectedApartment, selectedCustomer).GetAwaiter().GetResult();
+                    CreateReservation(reservation).GetAwaiter().GetResult();
                 
                     Console.WriteLine("You have " + input == "r" ? "reserved" : "booked" + " the apartment successfully!");
                     Console.WriteLine();
@@ -168,13 +168,10 @@ namespace Cosmos_DB.UseCase
             }
         }
 
-        private async Task CreateReservation(
-            Reservation reservation, 
-            Apartment selectedApartment, 
-            Customer selectedCustomer)
+        private async Task CreateReservation(Reservation reservation)
         {
             var sha256 = SHA256.Create();
-            var valueToHash = string.Concat(selectedCustomer.Id, selectedApartment.Id, reservation.Of, reservation.To);
+            var valueToHash = string.Concat(reservation.CustomerId, reservation.ApartmentId, reservation.Of, reservation.To);
             var id = "";
             
             try
