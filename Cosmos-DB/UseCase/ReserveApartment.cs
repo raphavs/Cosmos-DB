@@ -145,7 +145,7 @@ namespace Cosmos_DB.UseCase
                     // Add reservation to database
                     CreateReservation(reservation).GetAwaiter().GetResult();
                 
-                    Console.WriteLine("You have " + input == "r" ? "reserved" : "booked" + " the apartment successfully!");
+                    Console.WriteLine("You have " + (input == "r" ? "reserved" : "booked") + " the apartment successfully!");
                     Console.WriteLine();
                 }
                 else
