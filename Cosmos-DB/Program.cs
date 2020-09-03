@@ -8,12 +8,6 @@ namespace Cosmos_DB
 {
     internal class Program
     {
-        // The Azure Cosmos DB endpoint for running this sample.
-        private const string ENDPOINT_URI = "https://dbis2.documents.azure.com:443/";
-        
-        // The primary key for the Azure Cosmos account.
-        private const string PRIMARY_KEY = "y9iYtPxf2adljhu5GaF5gELGazibYhSxIWqITmDScX2pWJ8wCZukITjABQrQ58qw37Vh830TV0dMyeolZ7QggQ==";
-
         // The Cosmos client instance
         private CosmosClient cosmosClient;
 
@@ -72,7 +66,7 @@ namespace Cosmos_DB
         private async Task GetStartedDemoAsync()
         {
             // Create a new instance of the Cosmos Client
-            this.cosmosClient = new CosmosClient(ENDPOINT_URI, PRIMARY_KEY);
+            this.cosmosClient = new CosmosClient(SensitiveData.ENDPOINT_URI, SensitiveData.PRIMARY_KEY);
             await this.CreateDatabaseAsync();
             await this.CreateContainerAsync();
             
