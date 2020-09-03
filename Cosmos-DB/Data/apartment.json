@@ -1,13 +1,13 @@
 ﻿[
   {
     "id": "1",
-    "plz": "2349",
+    "postcode": "2349",
     "street": "Highway 5",
     "city": "Öludeniz",
     "country": "Turkey",
-    "apartment": "6",
-    "qm": 200,
-    "price": 349,
+    "apartment_number": "6",
+    "sqm": 200,
+    "price": 349.00,
     "description": "Finka",
     "additional_equipment": [
       "Swimming Pool",
@@ -20,13 +20,13 @@
   },
   {
     "id": "2",
-    "plz": "78461",
+    "postcode": "78461",
     "street": "Markgrafenstr. 33",
     "city": "Constance",
     "country": "Germany",
-    "apartment": "2",
-    "qm": 45,
-    "price": 120,
+    "apartment_number": "2",
+    "sqm": 45,
+    "price": 120.00,
     "description": "Apartment with Lake View",
     "additional_equipment": [
       "Parking Place",
@@ -39,79 +39,87 @@
   },
   {
     "id": "3",
-    "plz": "2234",
+    "postcode": "2234",
     "street": "Zur Piste 189",
     "city": "Chur",
     "country": "Switzerland",
-    "apartment": "3",
-    "qm": 150,
-    "price": 249,
+    "apartment_number": "3",
+    "sqm": 150,
+    "price": 249.00,
     "description": "In the Snow",
-    "additional_equipment": "Sauna",
-    "pictures": null
+    "additional_equipment": [
+      "Sauna"
+    ],
+    "pictures": []
   },
   {
     "id": "4",
     "street": "Rue Monsieur 980",
     "city": "Bordeaux",
     "country": "France",
-    "plz": "8234",
-    "apartment": "4",
-    "qm": 100,
-    "price": 249,
+    "postcode": "8234",
+    "apartment_number": "4",
+    "sqm": 100,
+    "price": 249.00,
     "description": "Right by the Sea",
-    "additional_equipment": null,
-    "pictures": null
+    "additional_equipment": [],
+    "pictures": []
   },
   {
     "id": "5",
     "street": "Rue de Gaulle 22",
     "city": "Disneyland",
     "country": "France",
-    "plz": "8787",
-    "apartment": "3",
-    "qm": 110,
-    "price": 289,
+    "postcode": "8787",
+    "apartment_number": "3",
+    "sqm": 110,
+    "price": 289.00,
     "description": "Directly at the Park",
     "additional_equipment": [
       "Childcare",
       "Swimming Pool"
     ],
-    "pictures": "garage.gif"
+    "pictures": [
+      "garage.gif"
+    ]
   },
   {
     "id": "6",
-    "plz": "8792",
+    "postcode": "8792",
     "street": "Rue de la Maison Blanche 32",
     "city": "Paris",
     "country": "France",
-    "apartment": "2",
-    "qm": 70,
-    "price": 549,
+    "apartment_number": "2",
+    "sqm": 70,
+    "price": 549.00,
     "description": "With View to the Eiffel Tower",
-    "additional_equipment": "Swimming Pool",
-    "pictures": null
+    "additional_equipment": [
+      "Swimming Pool"
+    ],
+    "pictures": []
   },
   {
     "id": "7",
-    "plz": "8792",
-    "apartment": "6",
+    "postcode": "8792",
+    "apartment_number": "6",
     "street": "Rue Liberte 78",
-    "qm": 110,
-    "price": 159,
+    "sqm": 110,
+    "price": 159.00,
     "description": "Central Penthouse Apartment",
     "city": "Paris",
     "country": "France",
-    "additional_equipment": "Swimming Pool",
-    "pictures": null
+    "additional_equipment": [
+      "Swimming Pool"
+    ],
+    "pictures": []
   },
   {
     "id": "8",
-    "plz": "2321",
-    "apartment": "12",
+    "postcode": "2321",
+    "apartment_number": "12",
     "street": "Strandweg 90",
-    "qm": 200,
-    "price": 240,
+    "sqm": 200,
+    "price": 240.00,
     "description": "Two storey House",
     "city": "Antalya",
     "country": "Turkey",
@@ -120,15 +128,17 @@
       "Cleaning",
       "Rooftop Terrace"
     ],
-    "pictures": "rooftop_terrace.jpg"
+    "pictures": [
+      "rooftop_terrace.jpg"
+    ]
   },
   {
     "id": "9",
-    "plz": "2321",
-    "apartment": "5",
+    "postcode": "2321",
+    "apartment_number": "5",
     "street": "Strandweg 91",
-    "qm": 111,
-    "price": 159,
+    "sqm": 111,
+    "price": 159.00,
     "description": "Top Villa at the Beach",
     "city": "Antalya",
     "country": "Turkey",
@@ -136,32 +146,34 @@
       "Garage",
       "Swimming Pool"
     ],
-    "pictures": null
+    "pictures": []
   },
   {
     "id": "10",
-    "plz": "5221",
-    "apartment": "4",
+    "postcode": "5221",
+    "apartment_number": "4",
     "street": "Calle del Torro 821",
-    "qm": 100,
-    "price": 299,
+    "sqm": 100,
+    "price": 299.00,
     "description": "Cottage on the Beach",
     "city": "Barcelona",
     "country": "Spain",
-    "additional_equipment": null,
-    "pictures": null
+    "additional_equipment": [],
+    "pictures": []
   },
   {
     "id": "11",
-    "plz": "2321",
-    "apartment": "4",
+    "postcode": "2321",
+    "apartment_number": "4",
     "street": "Strandweg 45",
-    "qm": 100,
-    "price": 150,
+    "sqm": 100,
+    "price": 150.00,
     "description": "Beach Bungalow",
     "city": "Antalya",
     "country": "Turkey",
-    "additional_equipment": "Swimming Pool",
-    "pictures": null
+    "additional_equipment": [
+      "Swimming Pool"
+    ],
+    "pictures": []
   }
 ]
